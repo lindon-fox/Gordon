@@ -2,6 +2,7 @@ package ehe.gordon.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * @author TC05
@@ -85,7 +86,8 @@ public class Snippet {
 	 */
 	private String substitute(String contents, Snippet subSnippet) {
 		String parameter = subSnippet.getParameter();
-		return contents.replaceAll(parameter, subSnippet.getContents());
+		String quoteSafeContent = Matcher.quoteReplacement(subSnippet.getContents());//this need to be done to stop the special charactes (like backslash) from getting lost in the replacement.
+		return contents.replaceAll(parameter, quoteSafeContent);
 	}
 
 	/**

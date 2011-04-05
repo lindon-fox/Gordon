@@ -20,6 +20,7 @@ public class HTMLSnippetLoader {
 	private String pageSnippetPath;
 
 	public HTMLSnippetLoader(){
+		//change this so that it loads all files in one directory (with the extension .inc)
 		this.infoEntrySnippetPath = "./html templates/info entry.inc";
 		this.infoEntryPairSnippetPath = "./html templates/info entry pair.inc";
 		this.infoTableSnippetPath = "./html templates/info table.inc";

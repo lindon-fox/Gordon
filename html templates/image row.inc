@@ -5,5 +5,8 @@ It uses the following variables:
  - _height_
  - _width_
 -->
-
-<a class="image"><img src="{{{image_source}}}" width="{{{height}}}" height="{{{height}}}" /></a>
+<tr class="image_row">
+<td class="image_entry" colspan="2">
+<a class="image"><img src="{{{image_source}}}" width="{{{width}}}" height="{{{height}}}" /></a>
+</td>
+</tr>

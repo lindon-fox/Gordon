@@ -32,6 +32,11 @@ public class ColumnDefinition {
 	public String getSnippetName() {
 		return snippetName;
 	}
+
+	
+	public List<Parameter> getParameters() {
+		return parameters;
+	}
 	
 	
 }

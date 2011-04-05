@@ -138,14 +138,14 @@ public class InputLoader {
 		List<Snippet> snippets = new ArrayList<Snippet>();
 		// read the contents of the file...
 		while ((line = bufferedReader.readLine()) != null) {
-			cardInfo = new CardInfo();
+			cardInfo = new CardInfo
+			(columnDefinitions);
 			cardInfos.add(cardInfo);
 			contentColumnIndex = 0;
 			lineTokens = line.split(DELIMITER);
 			for (int i = 0; i < lineTokens.length; i++) {
 				infoEntry = new InfoEntry(lineTokens[i],
-						columnDefinitions
-								.getContentColumnDefinition(contentColumnIndex));
+						columnDefinitions.getColumnDefinition(contentColumnIndex));
 				cardInfo.add(infoEntry);
 				contentColumnIndex++;
 			}
@@ -166,7 +166,7 @@ public class InputLoader {
 	 */
 	private ColumnDefinition parseColumnDefinition(String columnInput) {
 		ColumnDefinition columnDefinition;
-		String[] tokens = columnInput.split("|");
+		String[] tokens = columnInput.split("\\|");
 		// the first item should be the token name, so check that it is a loaded
 		// snippet
 		String snippetName = tokens[0];
@@ -176,7 +176,7 @@ public class InputLoader {
 		}
 		columnDefinition = new ColumnDefinition(snippetName);
 		if (tokens.length > 1) {
-			for (int i = 0; i < tokens.length; i++) {
+			for (int i = 1; i < tokens.length; i++) {
 				String parameterInput = tokens[i];
 				columnDefinition
 						.addParameter(parseParameterDefinition(parameterInput));

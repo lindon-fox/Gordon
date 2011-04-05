@@ -16,4 +16,9 @@ public class Parameter {
 	public String getValue() {
 		return parameterValue;
 	}	
+	
+	@Override
+	public String toString() {
+		return parameterName + " = " + parameterValue;
+	}
 }

@@ -6,24 +6,24 @@ import java.util.List;
 public class ColumnDefinitions {
 
 	public List<ColumnDefinition> columnDefinitions;
-	public List<ColumnDefinition> contentColumnDefinitions;
 
 	public ColumnDefinitions() {
 		columnDefinitions = new ArrayList<ColumnDefinition>();
-		contentColumnDefinitions = new ArrayList<ColumnDefinition>();
 	}
 
-	public ColumnDefinition getContentColumnDefinition(
-			int contentColumnIndex) {
-		return contentColumnDefinitions.get(contentColumnIndex);
+	public ColumnDefinition getColumnDefinition(int columnIndex) {
+		return columnDefinitions.get(columnIndex);
 	}
 
 	public void add(ColumnDefinition columnDefinition) {
 		columnDefinitions.add(columnDefinition);
-		if (columnDefinition.titleOnly == false) {
-			contentColumnDefinitions.add(columnDefinition);
-		}
 	}
+	
+	
+	public List<ColumnDefinition> getColumnDefinitions() {
+		return columnDefinitions;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
