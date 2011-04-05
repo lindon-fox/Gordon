@@ -35,6 +35,7 @@ public class InputLoader {
 	 *         one for each card)
 	 */
 	public List<Snippet> loadInput() {
+		List<Snippet> snippets = new ArrayList<Snippet>();
 		try {
 			FileReader fr = new FileReader(inputPath);
 			BufferedReader br = new BufferedReader(fr);
@@ -46,19 +47,15 @@ public class InputLoader {
 				checkSyntax(line);
 				// get the column definitions
 				columnDefinitions = parseColumnDefinitions(line);
-				System.out.println("The header of the input file (" + inputPath
-						+ ") has beed parsed with no problems.");
 			} else {
 				throw new IllegalArgumentException(
 						"There was no content in the file: " + inputPath);
 			}
 			List<CardInfo> cards = parseCards(br, columnDefinitions);
-			List<Snippet> snippets = new ArrayList<Snippet>();
 			for (CardInfo card : cards) {
 				Snippet snippet = snippetSourceMap.createSnippet(card);
 				snippets.add(snippet);
 			}
-			return snippets;
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -73,7 +70,8 @@ public class InputLoader {
 			System.err
 					.println("There was an error with the format of the input file, or something like that.");
 		}
-		return null;
+		System.out.println("finished importing from " + inputPath);
+		return snippets;
 
 	}
 
@@ -116,7 +114,6 @@ public class InputLoader {
 								+ inputPath
 								+ ") does not look correct - it should start and and with the  '{' and '}' characters (respectivley). This will cause some problems, so this file will not be parsed, so there will be no data loaded from this file.");
 			}
-			System.out.println(line.replaceAll("[^{]", "").length());
 			if (line.replaceAll("[^{]", "").length() != line.replaceAll("[^}]",
 					"").length()) {
 				throw new IllegalArgumentException(

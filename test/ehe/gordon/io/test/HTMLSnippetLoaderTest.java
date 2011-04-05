@@ -9,7 +9,7 @@ import ehe.gordon.io.HTMLSnippetLoader;
 
 
 /**
- * @author Boy.pockets
+ * @author lindon-fox
  *
  */
 public class HTMLSnippetLoaderTest {
