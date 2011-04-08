@@ -1,7 +1,7 @@
 .settings
 .project
 .classpath
-bin
+bin/
 html output/*
 playground.jpage
 html templates/test data/
