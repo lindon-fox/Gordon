@@ -4,11 +4,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import ehe.gordon.model.Snippet;
+import ehe.gordon.model.SnippetImplementation;
 
 public class HTMLSnippetWriter {
 
-	public void writeSnippet(Snippet snippet) {
+	public void writeSnippet(SnippetImplementation snippet) {
 		String path = "./html output/test.html";
 
 		FileWriter fstream;

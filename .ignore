@@ -4,3 +4,4 @@
 bin
 html output/*
 playground.jpage
+html templates/test data/

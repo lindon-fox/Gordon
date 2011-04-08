@@ -9,24 +9,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import ehe.gordon.model.Snippet;
-import ehe.gordon.model.Snippets;
+import ehe.gordon.model.SnippetDefinition;
+import ehe.gordon.model.SnippetDefinitionMap;
+import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.model.card.CardInfo;
 import ehe.gordon.model.card.ColumnDefinition;
 import ehe.gordon.model.card.ColumnDefinitions;
 import ehe.gordon.model.card.InfoEntry;
 import ehe.gordon.model.card.Parameter;
 
-public class InputLoader {
+/**
+ * This file gets the <code>snippetSourceMap</code> and then translates
+ * the input file into Snippets.
+ * @author lindon-fox
+ * 
+ */
+public class DataInputLoader {
 
 	private static final String DELIMITER = "~";
 	private static final String PARAMETER_DELIMITER = "=";
 	private String inputPath;
-	private Snippets snippetSourceMap;
+	private SnippetDefinitionMap snippetSourceMap;
 
-	public InputLoader(Snippets snippetSourceMap) {
+	public DataInputLoader(SnippetDefinitionMap snippetDefinitionMap) {
 		this.inputPath = "./html templates/test data/input.txt";
-		this.snippetSourceMap = snippetSourceMap;
+		this.snippetSourceMap = snippetDefinitionMap;
 	}
 
 	/**
@@ -34,8 +41,8 @@ public class InputLoader {
 	 * @return - a list of snippets - one for each entry (in the current case,
 	 *         one for each card)
 	 */
-	public List<Snippet> loadInput() {
-		List<Snippet> snippets = new ArrayList<Snippet>();
+	public List<SnippetImplementation> loadDataInput() {
+		List<SnippetImplementation> snippets = new ArrayList<SnippetImplementation>();
 		try {
 			FileReader fr = new FileReader(inputPath);
 			BufferedReader br = new BufferedReader(fr);
@@ -53,8 +60,8 @@ public class InputLoader {
 			}
 			List<CardInfo> cards = parseCards(br, columnDefinitions);
 			for (CardInfo card : cards) {
-				Snippet snippet = snippetSourceMap.createSnippet(card);
-				snippets.add(snippet);
+				SnippetImplementation snippetImplementation = snippetSourceMap.createSnippet(card);
+				snippets.add(snippetImplementation);
 			}
 
 		} catch (FileNotFoundException e) {
@@ -132,17 +139,17 @@ public class InputLoader {
 		CardInfo cardInfo;
 		int contentColumnIndex;
 		InfoEntry infoEntry;
-		List<Snippet> snippets = new ArrayList<Snippet>();
+		List<SnippetDefinition> snippets = new ArrayList<SnippetDefinition>();
 		// read the contents of the file...
 		while ((line = bufferedReader.readLine()) != null) {
-			cardInfo = new CardInfo
-			(columnDefinitions);
+			cardInfo = new CardInfo(columnDefinitions);
 			cardInfos.add(cardInfo);
 			contentColumnIndex = 0;
 			lineTokens = line.split(DELIMITER);
 			for (int i = 0; i < lineTokens.length; i++) {
 				infoEntry = new InfoEntry(lineTokens[i],
-						columnDefinitions.getColumnDefinition(contentColumnIndex));
+						columnDefinitions
+								.getColumnDefinition(contentColumnIndex));
 				cardInfo.add(infoEntry);
 				contentColumnIndex++;
 			}
@@ -218,6 +225,7 @@ public class InputLoader {
 	}
 
 	/**
+	 * Takes a parameter (snippet argument) as input and returns a <code>Parameter</code> object
 	 * @param parameterInput
 	 *            - input that looks like this; - width=300px - height= -
 	 *            image_source=* Note, if the value is a '*', that means it is
@@ -225,7 +233,7 @@ public class InputLoader {
 	 * @return
 	 */
 	private Parameter parseParameterDefinition(String parameterInput) {
-		String[] tokens = parameterInput.split(InputLoader.PARAMETER_DELIMITER);
+		String[] tokens = parameterInput.split(DataInputLoader.PARAMETER_DELIMITER);
 		String parameterName;
 		String parameterValue;
 		if (tokens.length == 1) {
@@ -237,7 +245,7 @@ public class InputLoader {
 				// there seems to be a mistake with the input
 				throw new IllegalArgumentException(
 						"I was expecting the last character of the parameter input to be '"
-								+ InputLoader.PARAMETER_DELIMITER
+								+ DataInputLoader.PARAMETER_DELIMITER
 								+ "', but it was not...");
 			}
 		} else if (tokens.length == 2) {
@@ -245,7 +253,7 @@ public class InputLoader {
 			parameterValue = tokens[1];
 		} else {
 			throw new IllegalArgumentException("I was expecting only one '"
-					+ InputLoader.PARAMETER_DELIMITER + "' character in; "
+					+ DataInputLoader.PARAMETER_DELIMITER + "' character in; "
 					+ parameterInput);
 		}
 		return new Parameter(parameterName, parameterValue);

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ehe.gordon.model.Snippet;
+import ehe.gordon.model.SnippetDefinition;
 
 /**
  * This class loads all the template files from a particular directory. Having
@@ -40,13 +40,13 @@ public class HTMLSnippetLoader {
 	/**
 	 * @return all the snippets in the <code>filesToLoad</code> list.
 	 */
-	public HashMap<String, Snippet> loadSnippets() {
-		HashMap<String, Snippet> snippetMap = new HashMap<String, Snippet>(
+	public HashMap<String, SnippetDefinition> loadSnippets() {
+		HashMap<String, SnippetDefinition> snippetMap = new HashMap<String, SnippetDefinition>(
 				filesToLoad.size());
 		for (File file : filesToLoad) {
 			try {
 				String contents = loadAndStripSnippet(file.getCanonicalPath());
-				Snippet snippet = new Snippet(getSnippetNameFromFile(file),
+				SnippetDefinition snippet = new SnippetDefinition(getSnippetNameFromFile(file),
 						contents);
 				snippetMap.put(snippet.getName(), snippet);
 			} catch (FileNotFoundException e) {

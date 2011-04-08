@@ -4,6 +4,6 @@
 
 </head>
 <body>
-{{{body}}}
+{{{generic_body}}}
 </body>
 </html>
