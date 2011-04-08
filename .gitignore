@@ -1,0 +1,7 @@
+.settings/
+.project
+.classpath
+bin/
+html output/*
+playground.jpage
+html templates/test data/
