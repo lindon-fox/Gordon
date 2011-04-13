@@ -1,10 +1,17 @@
 package ehe.gordon;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import javax.imageio.ImageIO;
+
+import ehe.gordon.image.ImageUtilities;
 import ehe.gordon.io.HTMLSnippetLoader;
 import ehe.gordon.io.HTMLSnippetWriter;
 import ehe.gordon.io.DataInputLoader;
@@ -16,6 +23,8 @@ import ehe.gordon.model.SnippetRepeater;
 
 public class Gordon {
 
+	private SnippetDefinitionMap snippetDefinitionMap;
+	private SnippetImplementation page;
 	/**
 	 * @param args
 	 */
@@ -24,14 +33,40 @@ public class Gordon {
 	}
 
 	public Gordon() {
+		
 		HTMLSnippetLoader loader = new HTMLSnippetLoader();
 		HashMap<String, SnippetDefinition> snippetMap = loader.loadSnippets();
 
-		SnippetDefinitionMap snippetDefinitionMap = new SnippetDefinitionMap(snippetMap);
+		snippetDefinitionMap = new SnippetDefinitionMap(snippetMap);
 
+		
+		loadUserDataInput();
+		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();
+		htmlSnippetWriter.writeSnippet(page);
+//		
+//		// now, put it all in a html page. This should be a snippet too, but for
+//		// now, just quick and dirty.
+//		StringBuilder outputTableContents = new StringBuilder();
+//		for (SnippetImplementation outputTableSnippet : outputTables) {
+//			outputTableContents.append(outputTableSnippet.getContents());
+//			outputTableContents.append('\n');
+//		}
+//		// create the body snippet
+//		SnippetImplementation bodySnippet = new SnippetImplementation("body",
+//				outputTableContents.toString());
+//		// create the page snippet
+//		SnippetImplementation pageSnippet = snippetDefinitionMap.createSnippetImplementation("page");
+//		pageSnippet.addSubSnippet(bodySnippet);
+//		// write it all out to a file.
+//		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();
+//		htmlSnippetWriter.writeSnippet(pageSnippet);
+
+		System.out.println("finished...");
+	}
+
+	private void loadUserDataInput() {
 		DataInputLoader inputLoader = new DataInputLoader(snippetDefinitionMap);
 		List<SnippetImplementation> outputTables = inputLoader.loadDataInput();//this should be allocated a snippet name
-		
 		//now that I have a list of snippet implementation, I can put it in a table.
 		//I want it to be generic to allow multiple columns,
 		int maxColumns = 3;//the number of columns to fill before the next row is created.
@@ -69,27 +104,8 @@ public class Gordon {
 		//and now add the body to the page
 		SnippetImplementation page = snippetDefinitionMap.createSnippetImplementation("page");
 		page.addSubSnippet(body);
-		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();
-		htmlSnippetWriter.writeSnippet(page);
-//		
-//		// now, put it all in a html page. This should be a snippet too, but for
-//		// now, just quick and dirty.
-//		StringBuilder outputTableContents = new StringBuilder();
-//		for (SnippetImplementation outputTableSnippet : outputTables) {
-//			outputTableContents.append(outputTableSnippet.getContents());
-//			outputTableContents.append('\n');
-//		}
-//		// create the body snippet
-//		SnippetImplementation bodySnippet = new SnippetImplementation("body",
-//				outputTableContents.toString());
-//		// create the page snippet
-//		SnippetImplementation pageSnippet = snippetDefinitionMap.createSnippetImplementation("page");
-//		pageSnippet.addSubSnippet(bodySnippet);
-//		// write it all out to a file.
-//		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();
-//		htmlSnippetWriter.writeSnippet(pageSnippet);
-
-		System.out.println("finished...");
 	}
+
+
 
 }
