@@ -3,26 +3,24 @@ package ehe.gordon.model.card;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ColumnDefinition {
-	String snippetName;//the name of the snippet that this column will be linked with
-	List<Parameter> parameters; //the parameter and values to be substituted
-	
-	
-	
+	String snippetName;// the name of the snippet that this column will be
+						// linked with
+	List<Parameter> parameters; // the parameter and values to be substituted
+
 	public ColumnDefinition(String snippetName) {
 		super();
 		this.snippetName = snippetName;
 		this.parameters = new ArrayList<Parameter>();
 	}
 
-	public void addParameter(Parameter parameter){
+	public void addParameter(Parameter parameter) {
 		parameters.add(parameter);
 	}
-	
-	public String getParameterValue(String parameterName){
-		for (Parameter parameter: parameters) {
-			if(parameter.getName().equals(parameterName)){
+
+	public String getParameterValue(String parameterName) {
+		for (Parameter parameter : parameters) {
+			if (parameter.getName().equals(parameterName)) {
 				return parameter.getValue();
 			}
 		}
@@ -33,10 +31,22 @@ public class ColumnDefinition {
 		return snippetName;
 	}
 
-	
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return snippetName + " (" + parameters.toArray().toString() + ")";
+	}
+
+	public int getVariableParameterValueCount() {
+		int count = 0;
+		for (Parameter parameter : parameters) {
+			if(parameter.valueIsVariable()){
+				count++;
+			}
+		}
+		return count;
+	}
 }

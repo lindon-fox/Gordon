@@ -33,28 +33,28 @@ public class SnippetDefinitionMap {
 		// TODO need to loop on column definitions instead of info entries. Will
 		// need to use a counter to keep up with the current column (or
 		// something)
-		for (InfoEntry infoEntry : infoEntries) {
-			for (ColumnDefinition columnDefinition : card
-					.getColumnDefinitions().getColumnDefinitions()) {
-
-			}
-			SnippetImplementation infoSnippet = createSnippetImplementation(infoEntry
-					.getColumnDefinition().getSnippetName());
-			for (Parameter parameter : infoEntry.getColumnDefinition()
-					.getParameters()) {
+		int infoEntriesIndexCounter = 0;
+		int infoEntriesExpectedCount = card.getColumnDefinitions().getContentColumnCount();
+		for (ColumnDefinition columnDefinition : card.getColumnDefinitions()
+				.getColumnDefinitions()) {
+			SnippetImplementation snippetImplementation = createSnippetImplementation(columnDefinition
+					.getSnippetName());
+			for (Parameter parameter : columnDefinition.getParameters()) {
 				String value;
-				if (parameter.getValue().equals("*")) {// TODO change this to a
-														// constant (it is used
-														// elsewhere)
-					// use the value from the row
-					value = infoEntry.getLabel();// TODO change the name of this
+				if (parameter.valueIsVariable()) {
+					if(infoEntries.get(infoEntriesIndexCounter) == null){
+						throw new IllegalArgumentException("Was expecting there to be more info entries than supplied. Was expecting: " + infoEntriesExpectedCount);
+					}
+					value = infoEntries.get(infoEntriesIndexCounter).getLabel();
+					infoEntriesIndexCounter++;
 				} else {
 					value = parameter.getValue();
 				}
-				infoSnippet.addSubSnippet(new SnippetImplementation(parameter
-						.getName(), value));
+				snippetImplementation.addSubSnippet(new SnippetImplementation(
+						parameter.getName(), value));
 			}
-			infoEntriesContentsBuilder.append(infoSnippet.getContents());
+			infoEntriesContentsBuilder.append(snippetImplementation
+					.getContents());
 			infoEntriesContentsBuilder.append('\n');
 		}
 

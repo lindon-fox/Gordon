@@ -1,6 +1,7 @@
 package ehe.gordon.model.card;
 
 public class Parameter {
+	public static final String REPEATER = "*";
 	private String parameterName;
 	private String parameterValue;
 	
@@ -16,6 +17,10 @@ public class Parameter {
 	public String getValue() {
 		return parameterValue;
 	}	
+	
+	public boolean valueIsVariable() {
+		return Parameter.REPEATER.equals(this.getValue());
+	}
 	
 	@Override
 	public String toString() {

@@ -78,7 +78,7 @@ public class HTMLSnippetLoader {
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				snippet.append(line);
-				snippet.append('\n');
+//				snippet.append('\n');
 			}
 			// just chucking in the comments as they are for now, but eventually
 			// will be throwing away the comments, but later will keep it and do

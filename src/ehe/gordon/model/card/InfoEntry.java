@@ -12,6 +12,10 @@ public class InfoEntry {
 		return columnDefinition;
 	}
 
+	/**
+	 * TODO rename this to a more meaningful name
+	 * @return
+	 */
 	public String getLabel() {
 		return label;
 	}

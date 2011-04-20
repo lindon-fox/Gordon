@@ -31,8 +31,17 @@ public class DataInputLoader {
 	private String inputPath;
 	private SnippetDefinitionMap snippetSourceMap;
 
-	public DataInputLoader(SnippetDefinitionMap snippetDefinitionMap) {
-		this.inputPath = "./html templates/test data/input.txt";
+	/**
+	 * @param snippetDefinitionMap
+	 * @param inputPath - if null or empty string, a default value will be used.
+	 */
+	public DataInputLoader(SnippetDefinitionMap snippetDefinitionMap, String inputPath) {
+		if(inputPath == null || inputPath.equals("")){
+			this.inputPath = "./html templates/test data/input.txt";
+		}
+		else{
+			this.inputPath = inputPath;
+		}
 		this.snippetSourceMap = snippetDefinitionMap;
 	}
 
@@ -47,17 +56,7 @@ public class DataInputLoader {
 			FileReader fr = new FileReader(inputPath);
 			BufferedReader br = new BufferedReader(fr);
 			String line = null;
-			ColumnDefinitions columnDefinitions = null;
-			// read the header of the file...
-			if (((line = br.readLine()) != null)) {
-				// do some syntax checking.
-				checkSyntax(line);
-				// get the column definitions
-				columnDefinitions = parseColumnDefinitions(line);
-			} else {
-				throw new IllegalArgumentException(
-						"There was no content in the file: " + inputPath);
-			}
+			ColumnDefinitions columnDefinitions = parseColumnDefinitions(br);
 			List<CardInfo> cards = parseCards(br, columnDefinitions);
 			for (CardInfo card : cards) {
 				SnippetImplementation snippetImplementation = snippetSourceMap.createSnippet(card);
@@ -80,6 +79,23 @@ public class DataInputLoader {
 		System.out.println("finished importing from " + inputPath);
 		return snippets;
 
+	}
+
+	private ColumnDefinitions parseColumnDefinitions(BufferedReader br)
+			throws IOException {
+		String line;
+		ColumnDefinitions columnDefinitions = null;
+		// read the header of the file...
+		if (((line = br.readLine()) != null)) {
+			// do some syntax checking.
+			checkSyntax(line);
+			// get the column definitions
+			columnDefinitions = parseColumnDefinitions(line);
+		} else {
+			throw new IllegalArgumentException(
+					"There was no content in the file: " + inputPath);
+		}
+		return columnDefinitions;
 	}
 
 	/**
@@ -141,15 +157,19 @@ public class DataInputLoader {
 		InfoEntry infoEntry;
 		List<SnippetDefinition> snippets = new ArrayList<SnippetDefinition>();
 		// read the contents of the file...
+		int expectedInfoEntryCount = columnDefinitions.getContentColumnCount();
 		while ((line = bufferedReader.readLine()) != null) {
 			cardInfo = new CardInfo(columnDefinitions);
 			cardInfos.add(cardInfo);
 			contentColumnIndex = 0;
 			lineTokens = line.split(DELIMITER);
+			if(lineTokens.length != expectedInfoEntryCount){
+				System.out.println("Expected to see " + expectedInfoEntryCount + ", but instead saw " + lineTokens.length + ". This needs to be fixed before the cards can be created. The problem was in this line: " + line );
+			}
 			for (int i = 0; i < lineTokens.length; i++) {
 				infoEntry = new InfoEntry(lineTokens[i],
 						columnDefinitions
-								.getColumnDefinition(contentColumnIndex));
+								.getContentColumnDefinition(contentColumnIndex));
 				cardInfo.add(infoEntry);
 				contentColumnIndex++;
 			}

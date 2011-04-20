@@ -6,10 +6,28 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class ImageUtilities {
 
+	/**
+	 * Eventually need to remove this test method
+	 */
+	private void doImageTest() {
+		BufferedImage img = null;
+		try {
+		    img = ImageIO.read(new File("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates\\test data\\292px-Roger_Federer_(26_June_2009,_Wimbledon)_2_new.jpg"));
+		    img = ImageUtilities.fitAndScaleImage(img, 200, 600);
+		    ImageIO.write(img, "gif", new File("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates\\test data\\292px-Roger_Federer_(26_June_2009,_Wimbledon)_2_sized3.gif"));
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		}
 
+	}
+	
 	public static BufferedImage fitAndScaleImage(BufferedImage originalImage,
 			int scaledWidth, int scaledHeight) {
 		// We need to scale the image properly so that it fits on one page.
