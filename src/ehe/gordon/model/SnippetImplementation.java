@@ -34,6 +34,9 @@ public class SnippetImplementation extends SnippetDefinition {
 	 *            <code>getContents</code> is called.
 	 */
 	public void addSubSnippet(SnippetImplementation subSnippet) {
+		if(subSnippet == null){
+			System.err.println("trying to add a null sub snippet. This is bad.");
+		}
 		this.subSnippets.add(subSnippet);
 	}
 
@@ -70,7 +73,12 @@ public class SnippetImplementation extends SnippetDefinition {
 				.getContents());// this need to be done to stop the special
 								// charactes (like backslash) from getting lost
 								// in the replacement.
-		return contents.replaceAll(parameter, quoteSafeContent);
+		String substitutedContents = contents.replaceAll(parameter, quoteSafeContent);
+		if(substitutedContents.equals(contents)){
+			//then nothing was replaced... want to report that fact...
+			System.out.println("The sub snippet '" + subSnippet.getParameter() + "' was not substituted into the contents, because a match on the name could not be found. This could be because there are duplicate entries, or there is a spelling mistake somewhere.");
+		}
+		return substitutedContents;
 	}
 
 	@Override

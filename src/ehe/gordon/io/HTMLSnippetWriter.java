@@ -1,26 +1,46 @@
 package ehe.gordon.io;
 
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 import ehe.gordon.model.SnippetImplementation;
 
 public class HTMLSnippetWriter {
 
-	public void writeSnippet(SnippetImplementation snippet) {
-		String path = "./html output/test.html";
+	public void writeSnippet(SnippetImplementation snippet, String outputFileName) {
+		String path = "./html output/" + outputFileName;
 
+		FileOutputStream fileOutputStream;
+		OutputStreamWriter outputStreamWriter = null;
+		
 		FileWriter fstream;
 		BufferedWriter out = null;
 		try {
-			fstream = new FileWriter(path);
-			out = new BufferedWriter(fstream);
-			out.write(snippet.getContents());
+			fileOutputStream = new FileOutputStream(path);
+			outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+			outputStreamWriter.write(snippet.getContents());
+			
+			
+//			fstream = new FileWriter(path);
+//
+//			out = new BufferedWriter(fstream);
+//			out.write(snippet.getContents());
+
 			System.out.println("Finished writing output to " + path);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			if(outputStreamWriter != null){
+				try {
+					outputStreamWriter.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if (out != null) {
 				try {
 					out.close();

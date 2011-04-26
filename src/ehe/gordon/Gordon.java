@@ -31,48 +31,57 @@ public class Gordon {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if (args != null && args.length > 1) {
+		if (args != null && args.length > 2) {
 			int maxColumns = -1;
-			try{
+			try {
 				maxColumns = Integer.parseInt(args[1]);
-			}
-			catch(NumberFormatException e){
+			} catch (NumberFormatException e) {
 				maxColumns = 3;
-				System.err.println("Was expecting an number (integer) for the second argument, but got; " + args[1] + ". Using default value instead; " + maxColumns);
+				System.err
+						.println("Was expecting an number (integer) for the second argument, but got; "
+								+ args[1]
+								+ ". Using default value instead; "
+								+ maxColumns);
 			}
-			new Gordon(args[0], maxColumns);
+			new Gordon(args[0], maxColumns, args[2]);
 		} else {
 			new GordonUI(null);
 		}
 	}
 
-	public Gordon(String inputPath, int maxColumns) {
+	public Gordon(String inputPath, int maxColumns, String bodyTemplateName) {
 
 		HTMLSnippetLoader loader = new HTMLSnippetLoader();
 		HashMap<String, SnippetDefinition> snippetMap = loader.loadSnippets();
 
 		snippetDefinitionMap = new SnippetDefinitionMap(snippetMap);
 
-		loadUserDataInput(inputPath, maxColumns);
+		loadUserDataInput(inputPath, maxColumns, bodyTemplateName);
 		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();
-		htmlSnippetWriter.writeSnippet(page);
+		String outputFileName = new File(inputPath).getName() + ".html";
+		System.out.println("The output file name: " + outputFileName);
+		if (outputFileName == null || outputFileName.equals("")) {
+			outputFileName = "test.html";
+		}
+
+		htmlSnippetWriter.writeSnippet(page, outputFileName);
 
 		System.out.println("finished...");
 	}
 
 	/**
 	 * @param inputPath
-	 * @param maxColumns the number of columns to fill before the next row is created.
+	 * @param maxColumns
+	 *            the number of columns to fill before the next row is created.
 	 */
-	private void loadUserDataInput(String inputPath, int maxColumns) {
+	private void loadUserDataInput(String inputPath, int maxColumns, String bodyTemplateName) {
 		DataInputLoader inputLoader = new DataInputLoader(snippetDefinitionMap,
 				inputPath);
 		// this should be allocated a snippet name now that I have a list of
 		// snippet implementation, I can put it in a table. I want it to be
 		// generic to allow multiple columns,
 		List<SnippetImplementation> outputTables = inputLoader.loadDataInput();
-		
-		
+		double columnWidth = 100.0 / maxColumns;
 		int columnIndex = 0;
 		StringBuilder stringBuilderNew = new StringBuilder();
 		SnippetRepeater trRepeater = new SnippetRepeater("generic_tr");
@@ -90,6 +99,7 @@ public class Gordon {
 			// create a cell snippet
 			SnippetImplementation tdSnippet = snippetDefinitionMap
 					.createSnippetImplementation("generic_td");
+			tdSnippet.addSubSnippet(new SnippetImplementation("row_width", columnWidth + "%"));
 			// add the contents (table) to the cell snippet
 			tdSnippet.addSubSnippet(new SnippetProxy("contents",
 					snippetImplementation));
@@ -101,17 +111,18 @@ public class Gordon {
 				columnIndex = 0;
 			}
 		}
-		// now we have the table row repeater ready for the table,
-		SnippetImplementation table = snippetDefinitionMap
-				.createSnippetImplementation("generic_table");
-		table.addSubSnippet(trRepeater);
+//		// now we have the table row repeater ready for the table,
+//		SnippetImplementation table = snippetDefinitionMap
+//				.createSnippetImplementation("generic_table");
+//		table.addSubSnippet(trRepeater);
 		// and now add the table to the body
 		SnippetImplementation body = snippetDefinitionMap
-				.createSnippetImplementation("generic_body");
-		body.addSubSnippet(table);
+				.createSnippetImplementation(bodyTemplateName);
+		body.addSubSnippet(trRepeater);
 		// and now add the body to the page
 		page = snippetDefinitionMap.createSnippetImplementation("page");
-		page.addSubSnippet(body);
+		
+		page.addSubSnippet(new SnippetProxy("body", body));
 	}
 
 }
