@@ -1,59 +1,66 @@
 package ehe.gordon.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import ehe.gordon.model.SnippetDefinition;
 import ehe.gordon.ui.controller.TemplateDirectoryBrowserController;
-import ehe.gordon.ui.controller.TemplateSelectorController;
 
-public class TemplateSelector extends JPanel {
+public class TemplateDirectoryBrowser extends JPanel {
 
 	private JLabel descriptionLabel;
 	private JTextField templateTextField;
 	private JButton templateChooserButton;
-	private TemplateSelectorController controller;
-	private SnippetDefinition snippetDefinition;
+	private TemplateDirectoryBrowserController controller;
+	private File directory = null;
+
 	private String helpMessage;
 
-	public TemplateSelector(TemplateDirectoryBrowserController sourceProvider, String helpMessage) {
-		super(new FlowLayout());
+	public TemplateDirectoryBrowser(String helpMessage) {
+		super(new BorderLayout());
 		initialise();
 		// TODO think about if this should be the opposite way around (ie, if
 		// the template selector should be passed in as a constructor argument
 		// for the controller.
-		controller = new TemplateSelectorController(this,
-				sourceProvider);
+		controller = new TemplateDirectoryBrowserController(this);
+		controller.initialise();
 		this.helpMessage = helpMessage;
 	}
 
 	private void initialise() {
+		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		descriptionLabel = new JLabel("");
-		this.add(descriptionLabel);
-		templateTextField = new JTextField(25);
+		this.add(descriptionLabel, BorderLayout.WEST);
+		
+		
+		templateTextField = new JTextField();
 		templateTextField.setEditable(false);
 		templateTextField.setBackground(Color.decode("#ECF6FF"));
 		templateTextField.setForeground(Color.darkGray);
-		this.add(templateTextField);
-		templateChooserButton = new JButton("choose...");
+		this.add(templateTextField, BorderLayout.CENTER);
+		JPanel eastPanel = new JPanel(new BorderLayout());
+		this.add(eastPanel, BorderLayout.EAST);
+
+		templateChooserButton = new JButton("browse...");
 		templateChooserButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.userChoosingNewTemplate(e);
 			}
 		});
-		this.add(templateChooserButton);
+		eastPanel.add(templateChooserButton, BorderLayout.WEST);
 		JButton helpButton = new JButton("<html><u>?</u></html>");
 		helpButton.setForeground(Color.blue);
-		// helpButton.setBorder(null);
 		helpButton.setOpaque(false);
 		helpButton.setContentAreaFilled(false);
 		helpButton.setBorderPainted(false);
@@ -64,18 +71,8 @@ public class TemplateSelector extends JPanel {
 				JOptionPane.showMessageDialog(null, helpMessage);
 			}
 		});
-		this.add(helpButton);
-	}
-	
-	public SnippetDefinition getSnippetDefinition() {
-		return snippetDefinition;
-	}
-
-	public void setSnippetDefinition(
-			SnippetDefinition snippetDefinition) {
-		this.snippetDefinition = snippetDefinition;
-		setTextFieldText(this.snippetDefinition.getName());
-		controller.newSnippetDefinitionSetActionEvent();
+		eastPanel.add(helpButton, BorderLayout.EAST);
+		
 	}
 
 	public void setTextFieldText(String text) {
@@ -85,9 +82,32 @@ public class TemplateSelector extends JPanel {
 	public void setDescriptionLabel(String text) {
 		descriptionLabel.setText(text);
 	}
-
-	public TemplateSelectorController getController() {
-		return controller;
+	
+	public void setDefaultLocation(String path){
+		File file = new File(path);
+		if(file.exists() == false){
+			throw new IllegalArgumentException("The default path did not exist... " + path);
+		}
+		setDirectory(file);
 	}
 
+	public void setDirectory(File file) {
+		this.directory = file;
+		if (file == null) {
+			this.setTextFieldText("empty");
+			this.templateTextField.setToolTipText("not yet set...");
+		} else {
+			this.setTextFieldText(file.getName());
+			this.templateTextField.setToolTipText(file.getAbsolutePath());
+		}
+		controller.newDirectorySetActionEvent(file);
+	}
+
+	public File getDirectory() {
+		return directory;
+	}
+
+	public TemplateDirectoryBrowserController getController() {
+		return controller;
+	}
 }

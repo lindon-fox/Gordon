@@ -8,6 +8,7 @@ import ehe.gordon.model.SnippetDefinitionMap;
 import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.model.SnippetProxy;
 import ehe.gordon.ui.GordonUI;
+import ehe.gordon.ui.TemplateDirectoryBrowser;
 import ehe.gordon.ui.TemplateSelector;
 
 public class GordonUIController {
@@ -18,8 +19,8 @@ public class GordonUIController {
 	}
 	public void runRequested(SnippetImplementation pageSnippet, String outputFileName) {
 		//get the folder...
-		TemplateSelector baseDirectorySelector = gordonUI.getBaseDirectoryTemplateSelector();
-		File directory = baseDirectorySelector.getFile();
+		TemplateDirectoryBrowser baseDirectoryBrowser = gordonUI.getBaseTemplateDirectoryBrowser();
+		File directory = baseDirectoryBrowser.getDirectory();
 		if(directory == null){
 			System.out.println("The directory has not been set.");
 			return;
@@ -32,7 +33,7 @@ public class GordonUIController {
 			return;
 		}
 		
-		SnippetDefinitionMap snippetDefinitionMap = new SnippetDefinitionMap(baseDirectorySelector.getController().getSnippetMap());
+		SnippetDefinitionMap snippetDefinitionMap = new SnippetDefinitionMap(baseDirectoryBrowser.getController().getSnippetMap());
 		pageSnippet.addSubSnippet(new SnippetProxy("body", snippetDefinitionMap.createSnippetImplementation(bodySnippet.getName())));
 		
 		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();

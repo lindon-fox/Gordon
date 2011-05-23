@@ -12,15 +12,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import ehe.gordon.Gordon;
-import ehe.gordon.model.SnippetDefinitionMap;
-import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.ui.controller.GordonUIController;
-import ehe.gordon.ui.controller.TemplateSelectorController.SelectorType;
 
 public class GordonUI extends JFrame {
 
 	protected GordonUIController controller;
-	private TemplateSelector baseDirectoryTemplateSelector;
+	private TemplateDirectoryBrowser baseTemplateDirectoryBrowser;
 	private TemplateSelector baseTemplateTemplateSelector;
 	private JTextField fileNameTextField;
 	private Gordon gordon;
@@ -38,27 +35,30 @@ public class GordonUI extends JFrame {
 		controller = new GordonUIController(this);
 
 		this.getContentPane().setLayout(new BorderLayout());
+
+		// //////////////////////////////////////////////////
+		// HEADER PANEL
+		// //////////////////////////////////////////////////
+		JPanel headerPanel = new JPanel();
+		this.add(headerPanel, BorderLayout.NORTH);
+		JLabel pageLabel = new JLabel("Using the default page template... " + gordon.getDefaultPageSnippet().getName());
+		headerPanel.add(pageLabel);
 		// //////////////////////////////////////////////////
 		// CONTENT PANEL
 		// //////////////////////////////////////////////////
-		JPanel contentPanel = new JPanel();
+		JPanel contentPanel = new JPanel(new BorderLayout());
 		this.add(contentPanel, BorderLayout.CENTER);
-		JLabel pageLabel = new JLabel("Using the default page template... " + gordon.getDefaultPageSnippet().getName());
-		contentPanel.add(pageLabel);
-		baseDirectoryTemplateSelector = new TemplateSelector(null,
-				SelectorType.TemplateDirectory,
-				"The directory where all the templates are stored.");
-		baseDirectoryTemplateSelector.setDescriptionLabel("template folder: ");
-		baseDirectoryTemplateSelector
+		baseTemplateDirectoryBrowser = new TemplateDirectoryBrowser("The directory where all the templates are stored.");
+		baseTemplateDirectoryBrowser.setDescriptionLabel("template folder: ");
+		baseTemplateDirectoryBrowser
 				.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates");
-		contentPanel.add(baseDirectoryTemplateSelector);
+		contentPanel.add(baseTemplateDirectoryBrowser, BorderLayout.NORTH);
 		baseTemplateTemplateSelector = new TemplateSelector(
-				baseDirectoryTemplateSelector.getController(),
-				SelectorType.IndividualTemplate,
+				baseTemplateDirectoryBrowser.getController(),
 				"The .inc file that defines the body of the page. This is the base template.");
 		baseTemplateTemplateSelector.setDescriptionLabel("base template: ");
 		// baseTemplateTemplateSelector.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates\\generic_body.inc");
-		contentPanel.add(baseTemplateTemplateSelector);
+		contentPanel.add(baseTemplateTemplateSelector, BorderLayout.SOUTH);
 
 		// //////////////////////////////////////////////////
 		// FOOTER PANEL
@@ -91,8 +91,8 @@ public class GordonUI extends JFrame {
 		this.setVisible(true);
 	}
 
-	public TemplateSelector getBaseDirectoryTemplateSelector() {
-		return baseDirectoryTemplateSelector;
+	public TemplateDirectoryBrowser getBaseTemplateDirectoryBrowser() {
+		return baseTemplateDirectoryBrowser;
 	}
 
 	public TemplateSelector getBaseTemplateTemplateSelector() {
