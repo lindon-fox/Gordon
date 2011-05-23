@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import javax.imageio.ImageIO;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import ehe.gordon.image.ImageUtilities;
 import ehe.gordon.io.HTMLSnippetLoader;
@@ -21,6 +23,7 @@ import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.model.SnippetProxy;
 import ehe.gordon.model.SnippetRepeater;
 import ehe.gordon.ui.GordonUI;
+import ehe.gordon.ui.ResizeMultipleImageWindow;
 
 public class Gordon {
 
@@ -29,8 +32,18 @@ public class Gordon {
 
 	/**
 	 * @param args
+	 * @throws UnsupportedLookAndFeelException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args){
+		 try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+
 		if (args != null && args.length > 2) {
 			int maxColumns = -1;
 			try {
@@ -45,13 +58,13 @@ public class Gordon {
 			}
 			new Gordon(args[0], maxColumns, args[2]);
 		} else {
-			new GordonUI(null);
+			new GordonUI();
 		}
 	}
 
 	public Gordon(String inputPath, int maxColumns, String bodyTemplateName) {
 
-		HTMLSnippetLoader loader = new HTMLSnippetLoader();
+		HTMLSnippetLoader loader = new HTMLSnippetLoader("./html templates/");
 		HashMap<String, SnippetDefinition> snippetMap = loader.loadSnippets();
 
 		snippetDefinitionMap = new SnippetDefinitionMap(snippetMap);
@@ -111,10 +124,6 @@ public class Gordon {
 				columnIndex = 0;
 			}
 		}
-//		// now we have the table row repeater ready for the table,
-//		SnippetImplementation table = snippetDefinitionMap
-//				.createSnippetImplementation("generic_table");
-//		table.addSubSnippet(trRepeater);
 		// and now add the table to the body
 		SnippetImplementation body = snippetDefinitionMap
 				.createSnippetImplementation(bodyTemplateName);

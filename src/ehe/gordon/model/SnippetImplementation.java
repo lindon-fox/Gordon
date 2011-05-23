@@ -68,7 +68,7 @@ public class SnippetImplementation extends SnippetDefinition {
 	 *         <code>getParameter()</code> with the <code>getContents()</code>.
 	 */
 	private String substitute(String contents, SnippetImplementation subSnippet) {
-		String parameter = subSnippet.getParameter();
+		String parameter = subSnippet.getNameAsParameterRegexSafe();
 		String quoteSafeContent = Matcher.quoteReplacement(subSnippet
 				.getContents());// this need to be done to stop the special
 								// charactes (like backslash) from getting lost
@@ -76,7 +76,7 @@ public class SnippetImplementation extends SnippetDefinition {
 		String substitutedContents = contents.replaceAll(parameter, quoteSafeContent);
 		if(substitutedContents.equals(contents)){
 			//then nothing was replaced... want to report that fact...
-			System.out.println("The sub snippet '" + subSnippet.getParameter() + "' was not substituted into the contents, because a match on the name could not be found. This could be because there are duplicate entries, or there is a spelling mistake somewhere.");
+			System.out.println("The sub snippet '" + subSnippet.getNameAsParameterRegexSafe() + "' was not substituted into the contents, because a match on the name could not be found. This could be because there are duplicate entries, or there is a spelling mistake somewhere.");
 		}
 		return substitutedContents;
 	}

@@ -15,7 +15,21 @@ import ehe.gordon.model.SnippetDefinition;
  * This class loads all the template files from a particular directory. Having
  * one and only one directory to load from and only one file extension should
  * ensure that all snippet names are unique. If not, then only one will survive
- * (ie only one of the duplicates will be used).
+ * (ie only one of the duplicates will be used). TODO: eventually, we will want
+ * to move away from this model. We want to be able to have sets of templates
+ * that we can just drop in without the worry of possibly breaking other
+ * templates (ie, overriding them). So we want to be able to have sub folders.
+ * We also want to be able to specify more than one css file. I guess the idea
+ * is that people can make their own sets and them share them with others. So
+ * for that, they would want to be able to specify:
+ * <ol>
+ * <li>
+ * The html templates (possibly including the default page)</li>
+ * <li>
+ * The css file</li>
+ * <li>
+ * ...</li>
+ * </ol>
  * 
  * @author lindon-fox
  */
@@ -23,10 +37,10 @@ public class HTMLSnippetLoader {
 
 	List<File> filesToLoad;
 
-	public HTMLSnippetLoader() {
+	public HTMLSnippetLoader(String directoryPath) {
 		// change this so that it loads all files in one directory (with the
 		// extension .inc)
-		File sourceDirectory = new File("./html templates/");
+		File sourceDirectory = new File(directoryPath);
 		File[] sourceFiles = sourceDirectory.listFiles();
 		filesToLoad = new ArrayList<File>();
 		for (int i = 0; i < sourceFiles.length; i++) {
@@ -35,6 +49,7 @@ public class HTMLSnippetLoader {
 				filesToLoad.add(sourceFiles[i]);
 			}
 		}
+		System.out.println("Found " + filesToLoad.size() + " files to load...");
 	}
 
 	/**
@@ -46,8 +61,8 @@ public class HTMLSnippetLoader {
 		for (File file : filesToLoad) {
 			try {
 				String contents = loadAndStripSnippet(file.getCanonicalPath());
-				SnippetDefinition snippet = new SnippetDefinition(getSnippetNameFromFile(file),
-						contents);
+				SnippetDefinition snippet = new SnippetDefinition(
+						getSnippetNameFromFile(file), contents);
 				snippetMap.put(snippet.getName(), snippet);
 			} catch (FileNotFoundException e) {
 				System.err.println("The file (" + file.getName()
@@ -60,7 +75,8 @@ public class HTMLSnippetLoader {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Loaded " + snippetMap.size() + " snippet(s) from " + filesToLoad.size() +" snippet file(s)." );
+		System.out.println("Loaded " + snippetMap.size() + " snippet(s) from "
+				+ filesToLoad.size() + " snippet file(s).");
 		return snippetMap;
 	}
 
@@ -78,7 +94,7 @@ public class HTMLSnippetLoader {
 			String line = "";
 			while ((line = br.readLine()) != null) {
 				snippet.append(line);
-//				snippet.append('\n');
+				// snippet.append('\n');
 			}
 			// just chucking in the comments as they are for now, but eventually
 			// will be throwing away the comments, but later will keep it and do

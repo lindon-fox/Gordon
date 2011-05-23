@@ -1,166 +1,75 @@
 package ehe.gordon.ui;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 
-import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.filechooser.FileFilter;
 
-import ehe.gordon.image.ImageUtilities;
+import ehe.gordon.ui.controller.GordonUIController;
+import ehe.gordon.ui.controller.TemplateSelectorController.SelectorType;
 
 public class GordonUI extends JFrame {
 
-	JTextArea log;
-	JTextField widthTextField;
-	JTextField heightTextFeild;
-	
-	public GordonUI(String args){
+	protected GordonUIController controller;
+	private TemplateSelector baseDirectoryTemplateSelector;
+	private TemplateSelector baseTemplateTemplateSelector;
+
+	public GordonUI(){
 		super();
+		controller = new GordonUIController(this);
+		
 		this.getContentPane().setLayout(new BorderLayout());
-		JButton browseButton = new JButton("Select Images...");
-		browseButton.addActionListener(new ActionListener() {
+		////////////////////////////////////////////////////
+		// CONTENT PANEL
+		////////////////////////////////////////////////////		
+		JPanel contentPanel = new JPanel();
+		this.add(contentPanel, BorderLayout.CENTER);
+		baseDirectoryTemplateSelector = new TemplateSelector(null, SelectorType.TemplateDirectory, "The directory where all the templates are stored.");
+		baseDirectoryTemplateSelector.setDescriptionLabel("template folder: ");
+		baseDirectoryTemplateSelector.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates");
+		contentPanel.add(baseDirectoryTemplateSelector);
+		baseTemplateTemplateSelector = new TemplateSelector(baseDirectoryTemplateSelector.getController(), SelectorType.IndividualTemplate, "The .inc file that defines the body of the page. This is the base template.");
+		baseTemplateTemplateSelector.setDescriptionLabel("base template: ");
+//		baseTemplateTemplateSelector.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates\\generic_body.inc");
+		contentPanel.add(baseTemplateTemplateSelector);		
+		
+		////////////////////////////////////////////////////
+		// FOOTER PANEL
+		////////////////////////////////////////////////////
+		JPanel footerPanel = new JPanel();
+		footerPanel.setLayout(new BorderLayout());
+		this.add(footerPanel, BorderLayout.SOUTH);
+		JButton runButton = new JButton("flash !");
+		runButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				selectImageFilesActionPerformed(e);
+				controller.runRequested(); 
 			}
 		});
+		footerPanel.add(runButton, BorderLayout.EAST);
+		footerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
-		JPanel contentPanel = new JPanel(); 
-		this.add(contentPanel, BorderLayout.CENTER);
-		contentPanel.add(new JLabel("width: "));
-		widthTextField = new JTextField(5);
-		contentPanel.add(widthTextField);
-		contentPanel.add(new JLabel("height: "));
-		heightTextFeild = new JTextField(5);
-		contentPanel.add(heightTextFeild);
-		contentPanel.add(browseButton);
-		
-		log = new JTextArea(12,20);
-//		log.setEditable(false);   
-		JScrollPane logScrollPane = new JScrollPane(log);
-		this.add(logScrollPane, BorderLayout.SOUTH);
-		
-		this.setSize(300, 300);
+		////////////////////////////////////////////////////
+		// frame properties
+		////////////////////////////////////////////////////		
+		this.setSize(500, 400);
+		this.setMinimumSize(getSize());
+		this.setTitle("Gordon");
 		this.setVisible(true);
 	}
-
-	protected void selectImageFilesActionPerformed(ActionEvent e) {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setMultiSelectionEnabled(true);
-		chooser.setCurrentDirectory(new File(".\\html templates\\test data\\"));
-		FileFilter filter1 = new ExtensionFileFilter("image files, like .jpg, .gif, .png", new String[] { "JPG", "JPEG", "GIF", "PNG" });
-		chooser.setFileFilter(filter1);
-		chooser.showDialog(this, "select");	
-		log.setText("");
-		for (int i = 0; i < chooser.getSelectedFiles().length; i++) {
-			writeToLog("Working on:");
-			writeToLog(chooser.getSelectedFiles()[i].getName());
-//			log.append(chooser.getSelectedFiles()[i].getParent());
-			BufferedImage img = null;
-			try {
-			    img = ImageIO.read(chooser.getSelectedFiles()[i]);
-			    img = ImageUtilities.fitAndScaleImage(img, getWidthUserInput(), getHeighUserInput());
-			    File outputPath = new File(chooser.getSelectedFiles()[i].getParent() + "\\output\\");
-			    if(outputPath.exists() == false){
-			    	outputPath.mkdir();
-			    }
-			    String filename = outputPath.getAbsolutePath() + "\\" + chooser.getSelectedFiles()[i].getName(); 
-			    ImageIO.write(img, "gif", new File(filename)); 
-			    writeToLog("finished with file: " + filename);
-			} catch (IOException ioex) {
-				System.err.println(ioex.getMessage());
-			}
-		}
-		writeToLog("completed all files.");
+	
+	public TemplateSelector getBaseDirectoryTemplateSelector(){
+		return baseDirectoryTemplateSelector;
 	}
-
-	private void writeToLog(String string) {
-		log.append(string + '\n');
-		System.out.println(string);
+	
+	public TemplateSelector getBaseTemplateTemplateSelector(){
+		return baseTemplateTemplateSelector;
 	}
-
-	private int getHeighUserInput() {
-		int height = 300;
-		String userInput = widthTextField.getText();
-		try{
-			height = Integer.parseInt(userInput);
-		}
-		catch(NumberFormatException e){
-			System.err.println("Incorrect format for the height; " + userInput + ". I was expecting something like this: " + height);
-		}
-		return height;
-	}
-
-	private int getWidthUserInput() {
-		int width = 200;
-		String userInput = heightTextFeild.getText();
-		try{
-			width = Integer.parseInt(userInput);
-		}
-		catch(NumberFormatException e){
-			System.err.println("Incorrect format for the height; " + userInput + ". I was expecting something like this: " + width);
-		}
-		return width;
-	}
-
-	class ExtensionFileFilter extends FileFilter {
-	  String description;
-
-	  String extensions[];
-
-	  public ExtensionFileFilter(String description, String extension) {
-	    this(description, new String[] { extension });
-	  }
-
-	  public ExtensionFileFilter(String description, String extensions[]) {
-	    if (description == null) {
-	      this.description = extensions[0];
-	    } else {
-	      this.description = description;
-	    }
-	    this.extensions = (String[]) extensions.clone();
-	    toLower(this.extensions);
-	  }
-
-	  private void toLower(String array[]) {
-	    for (int i = 0, n = array.length; i < n; i++) {
-	      array[i] = array[i].toLowerCase();
-	    }
-	  }
-
-	  public String getDescription() {
-	    return description;
-	  }
-
-	  public boolean accept(File file) {
-	    if (file.isDirectory()) {
-	      return true;
-	    } else {
-	      String path = file.getAbsolutePath().toLowerCase();
-	      for (int i = 0, n = extensions.length; i < n; i++) {
-	        String extension = extensions[i];
-	        if ((path.endsWith(extension) && (path.charAt(path.length() - extension.length() - 1)) == '.')) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  }
-	}
+	
 }

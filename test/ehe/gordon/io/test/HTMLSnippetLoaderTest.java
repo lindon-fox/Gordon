@@ -15,11 +15,11 @@ import ehe.gordon.io.HTMLSnippetLoader;
 public class HTMLSnippetLoaderTest {
 
 	public void HTMLSnippetLoaderConstructorTest(){
-		new HTMLSnippetLoader();
+		new HTMLSnippetLoader("./html templates/");
 	}
 	@Test
 	public void loadHTMLSnippetsTest(){
-		HTMLSnippetLoader loader = new HTMLSnippetLoader();
+		HTMLSnippetLoader loader = new HTMLSnippetLoader("./html templates/");
 		loader.loadSnippets();
 	}
 	
