@@ -27,18 +27,114 @@ import ehe.gordon.ui.ResizeMultipleImageWindow;
 
 public class Gordon {
 
-	private SnippetDefinitionMap snippetDefinitionMap;
-	private SnippetImplementation page;
+	public SnippetDefinitionMap defaultSnippetDefinitionMap;
+	private SnippetImplementation defaultPageSnippet;
+
+	public SnippetImplementation getDefaultPageSnippet() {
+		return defaultPageSnippet;
+	}
+
+	public void setDefaultPageSnippet(SnippetImplementation defaultPageSnippet) {
+		this.defaultPageSnippet = defaultPageSnippet;
+	}
+
+	public Gordon() {
+
+		HTMLSnippetLoader defaultLoader = new HTMLSnippetLoader(
+				"./html templates/");
+		HashMap<String, SnippetDefinition> snippetMap = defaultLoader
+				.loadSnippets();
+		defaultSnippetDefinitionMap = new SnippetDefinitionMap(snippetMap);
+		defaultPageSnippet = defaultSnippetDefinitionMap
+				.createSnippetImplementation("page");
+	}
+
+	public Gordon(String inputPath, int maxColumns, String bodyTemplateName) {
+
+		HTMLSnippetLoader defaultLoader = new HTMLSnippetLoader(
+				"./html templates/");
+		HashMap<String, SnippetDefinition> snippetMap = defaultLoader
+				.loadSnippets();
+
+		defaultSnippetDefinitionMap = new SnippetDefinitionMap(snippetMap);
+
+		loadUserDataInput(inputPath, maxColumns, bodyTemplateName);
+		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();
+		String outputFileName = new File(inputPath).getName() + ".html";
+		System.out.println("The output file name: " + outputFileName);
+		if (outputFileName == null || outputFileName.equals("")) {
+			outputFileName = "test.html";
+		}
+
+		htmlSnippetWriter.writeSnippet(defaultPageSnippet, outputFileName);
+
+		System.out.println("finished...");
+	}
+
+	/**
+	 * @param inputPath
+	 * @param maxColumns
+	 *            the number of columns to fill before the next row is created.
+	 */
+	private void loadUserDataInput(String inputPath, int maxColumns,
+			String bodyTemplateName) {
+		DataInputLoader inputLoader = new DataInputLoader(
+				defaultSnippetDefinitionMap, inputPath);
+		// this should be allocated a snippet name now that I have a list of
+		// snippet implementation, I can put it in a table. I want it to be
+		// generic to allow multiple columns,
+		List<SnippetImplementation> outputTables = inputLoader.loadDataInput();
+		double columnWidth = 100.0 / maxColumns;
+		int columnIndex = 0;
+		StringBuilder stringBuilderNew = new StringBuilder();
+		SnippetRepeater trRepeater = new SnippetRepeater("generic_tr");
+		SnippetRepeater tdRepeater = null;
+		for (SnippetImplementation snippetImplementation : outputTables) {
+			if (columnIndex == 0) {
+				// open the table row
+				tdRepeater = new SnippetRepeater("generic_td");
+				SnippetImplementation trSnippet = defaultSnippetDefinitionMap
+						.createSnippetImplementation("generic_tr");
+				trSnippet.addSubSnippet(tdRepeater);
+				trRepeater.addSubSnippet(trSnippet);
+
+			}
+			// create a cell snippet
+			SnippetImplementation tdSnippet = defaultSnippetDefinitionMap
+					.createSnippetImplementation("generic_td");
+			tdSnippet.addSubSnippet(new SnippetImplementation("row_width",
+					columnWidth + "%"));
+			// add the contents (table) to the cell snippet
+			tdSnippet.addSubSnippet(new SnippetProxy("contents",
+					snippetImplementation));
+			// get the current row and add a cell snippet to it...
+			tdRepeater.addSubSnippet(tdSnippet);
+			columnIndex++;
+			if (columnIndex >= maxColumns) {
+				// need to close off the row
+				columnIndex = 0;
+			}
+		}
+		// and now add the table to the body
+		SnippetImplementation body = defaultSnippetDefinitionMap
+				.createSnippetImplementation(bodyTemplateName);
+		body.addSubSnippet(trRepeater);
+		// and now add the body to the page
+		defaultPageSnippet = defaultSnippetDefinitionMap
+				.createSnippetImplementation("page");
+
+		defaultPageSnippet.addSubSnippet(new SnippetProxy("body", body));
+	}
 
 	/**
 	 * @param args
-	 * @throws UnsupportedLookAndFeelException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws ClassNotFoundException 
+	 * @throws UnsupportedLookAndFeelException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws ClassNotFoundException
 	 */
-	public static void main(String[] args){
-		 try {
+	public static void main(String[] args) {
+		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -61,77 +157,4 @@ public class Gordon {
 			new GordonUI();
 		}
 	}
-
-	public Gordon(String inputPath, int maxColumns, String bodyTemplateName) {
-
-		HTMLSnippetLoader loader = new HTMLSnippetLoader("./html templates/");
-		HashMap<String, SnippetDefinition> snippetMap = loader.loadSnippets();
-
-		snippetDefinitionMap = new SnippetDefinitionMap(snippetMap);
-
-		loadUserDataInput(inputPath, maxColumns, bodyTemplateName);
-		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();
-		String outputFileName = new File(inputPath).getName() + ".html";
-		System.out.println("The output file name: " + outputFileName);
-		if (outputFileName == null || outputFileName.equals("")) {
-			outputFileName = "test.html";
-		}
-
-		htmlSnippetWriter.writeSnippet(page, outputFileName);
-
-		System.out.println("finished...");
-	}
-
-	/**
-	 * @param inputPath
-	 * @param maxColumns
-	 *            the number of columns to fill before the next row is created.
-	 */
-	private void loadUserDataInput(String inputPath, int maxColumns, String bodyTemplateName) {
-		DataInputLoader inputLoader = new DataInputLoader(snippetDefinitionMap,
-				inputPath);
-		// this should be allocated a snippet name now that I have a list of
-		// snippet implementation, I can put it in a table. I want it to be
-		// generic to allow multiple columns,
-		List<SnippetImplementation> outputTables = inputLoader.loadDataInput();
-		double columnWidth = 100.0 / maxColumns;
-		int columnIndex = 0;
-		StringBuilder stringBuilderNew = new StringBuilder();
-		SnippetRepeater trRepeater = new SnippetRepeater("generic_tr");
-		SnippetRepeater tdRepeater = null;
-		for (SnippetImplementation snippetImplementation : outputTables) {
-			if (columnIndex == 0) {
-				// open the table row
-				tdRepeater = new SnippetRepeater("generic_td");
-				SnippetImplementation trSnippet = snippetDefinitionMap
-						.createSnippetImplementation("generic_tr");
-				trSnippet.addSubSnippet(tdRepeater);
-				trRepeater.addSubSnippet(trSnippet);
-
-			}
-			// create a cell snippet
-			SnippetImplementation tdSnippet = snippetDefinitionMap
-					.createSnippetImplementation("generic_td");
-			tdSnippet.addSubSnippet(new SnippetImplementation("row_width", columnWidth + "%"));
-			// add the contents (table) to the cell snippet
-			tdSnippet.addSubSnippet(new SnippetProxy("contents",
-					snippetImplementation));
-			// get the current row and add a cell snippet to it...
-			tdRepeater.addSubSnippet(tdSnippet);
-			columnIndex++;
-			if (columnIndex >= maxColumns) {
-				// need to close off the row
-				columnIndex = 0;
-			}
-		}
-		// and now add the table to the body
-		SnippetImplementation body = snippetDefinitionMap
-				.createSnippetImplementation(bodyTemplateName);
-		body.addSubSnippet(trRepeater);
-		// and now add the body to the page
-		page = snippetDefinitionMap.createSnippetImplementation("page");
-		
-		page.addSubSnippet(new SnippetProxy("body", body));
-	}
-
 }

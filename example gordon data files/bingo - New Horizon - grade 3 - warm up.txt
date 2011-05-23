@@ -1,0 +1,46 @@
+{info entry|label=*}
+B
+are~There are three more differences
+cry
+find~Find the differences
+gave
+give
+smile
+tell~tell me five differences
+try~Look at the pictures and try to find them
+I
+beautiful
+pretty
+cute
+famous
+high~The status is 46 meters high
+more~There are three more differences.
+difference
+popular
+N
+speech
+statue
+symbol
+top
+world
+meter
+built
+tower
+G
+tallest
+longest
+highest
+shortest
+largest
+smallest
+oldest
+newest
+O
+friendship
+picture
+view
+thousand
+million
+height
+length
+age

@@ -114,4 +114,5 @@ public class SnippetDefinitionMap {
 	public boolean isLoadedSnippet(String snippetName) {
 		return snippetDefinitionMap.containsKey(snippetName);
 	}
+
 }

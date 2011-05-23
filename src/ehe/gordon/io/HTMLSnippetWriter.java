@@ -22,13 +22,6 @@ public class HTMLSnippetWriter {
 			fileOutputStream = new FileOutputStream(path);
 			outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
 			outputStreamWriter.write(snippet.getContents());
-			
-			
-//			fstream = new FileWriter(path);
-//
-//			out = new BufferedWriter(fstream);
-//			out.write(snippet.getContents());
-
 			System.out.println("Finished writing output to " + path);
 		} catch (IOException e) {
 			e.printStackTrace();
