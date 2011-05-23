@@ -28,6 +28,7 @@ public class TemplateSelectorController {
 	private SelectorType selectorType;
 	private HashMap<String, SnippetDefinition> snippetMap;
 
+
 	public TemplateSelectorController(TemplateSelector templateSelector,
 			TemplateSelectorController sourceProvider, SelectorType selectorType) {
 		this.templateSelector = templateSelector;
@@ -115,5 +116,8 @@ public class TemplateSelectorController {
 		}
 		return templateSelector.getFile();
 	}
-	
+
+	public HashMap<String, SnippetDefinition> getSnippetMap() {
+		return snippetMap;
+	}
 }

@@ -1,3 +1,1 @@
-<table class="generic_table">
-{{{generic_tr}}}
-</table>
+This is the most simple page you can have.

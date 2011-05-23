@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import ehe.gordon.Gordon;
 import ehe.gordon.model.SnippetDefinitionMap;
@@ -21,6 +22,7 @@ public class GordonUI extends JFrame {
 	protected GordonUIController controller;
 	private TemplateSelector baseDirectoryTemplateSelector;
 	private TemplateSelector baseTemplateTemplateSelector;
+	private JTextField fileNameTextField;
 	private Gordon gordon;
 
 	public GordonUI() {
@@ -64,12 +66,17 @@ public class GordonUI extends JFrame {
 		JPanel footerPanel = new JPanel();
 		footerPanel.setLayout(new BorderLayout());
 		this.add(footerPanel, BorderLayout.SOUTH);
+		
+		JLabel fileNameLabel = new JLabel("output file name: ");
+		footerPanel.add(fileNameLabel, BorderLayout.WEST);
+		fileNameTextField = new JTextField("test.html");
+		footerPanel.add(fileNameTextField, BorderLayout.CENTER);
 		JButton runButton = new JButton("flash !");
 		runButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.runRequested();
+				controller.runRequested(gordon.getDefaultPageSnippet(), fileNameTextField.getText());
 			}
 		});
 		footerPanel.add(runButton, BorderLayout.EAST);
