@@ -17,6 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import ehe.gordon.Gordon;
+import ehe.gordon.model.Placeholder;
+import ehe.gordon.model.Placeholder.PlaceholderType;
 import ehe.gordon.ui.controller.GordonUIController;
 
 public class GordonUI extends JFrame {
@@ -82,7 +84,7 @@ public class GordonUI extends JFrame {
 		baseTemplateTemplateSelector = new TemplateSelector(
 				baseTemplateDirectoryBrowser.getController(), null, 
 				"The .inc file that defines the body of the page. This is the base template.");
-		baseTemplateTemplateSelector.setSnippetName("body");//body
+		baseTemplateTemplateSelector.setPlaceholder(new Placeholder("body", "", PlaceholderType.Template));//body
 		// baseTemplateTemplateSelector.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates\\generic_body.inc");
 		contentPanel.add(baseTemplateTemplateSelector, BorderLayout.SOUTH);
 		

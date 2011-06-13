@@ -1,0 +1,46 @@
+{info entry|label=*}
+B
+Italy
+America
+Canada
+Japan
+China
+Korea
+Philippines
+Russia
+I
+Mr.
+Ms.
+good
+morning
+good morning
+afternoon
+night
+good night
+N
+from
+yes
+no
+not
+you
+I
+I'm
+your
+G
+book
+again
+please
+nice
+goodbye
+bye
+see you
+how are you
+O
+close
+open
+page
+look
+listen
+repeat
+read
+together

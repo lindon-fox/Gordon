@@ -19,12 +19,13 @@ public class SnippetDefinition {
 	 * to be substituted.
 	 */
 	private String rawContents;
-	private List<String> placeholders;
+	private List<Placeholder> placeholders;
 
 	public SnippetDefinition(String name, String rawContents) {
 		super();
 		this.name = name;
 		setRawContents(rawContents);
+		placeholders = new ArrayList<Placeholder>();
 	}
 
 	public String getName() {
@@ -45,12 +46,13 @@ public class SnippetDefinition {
 	}
 
 	private void recalculatePlaceholders() {
-		placeholders = new ArrayList<String>();
+		placeholders = new ArrayList<Placeholder>();
 		assert placeholdersAreValid();
 		List<Integer> startIndexes = createIndexListOfOccurances(PARAMETER_START, false);
 		List<Integer> endIndexes = createIndexListOfOccurances(PARAMETER_END, true);
 		for (int i = 0; i < startIndexes.size(); i++) {
-			placeholders.add(getRawContents().substring(startIndexes.get(i), endIndexes.get(i)));
+			String placeholderRawContents = getRawContents().substring(startIndexes.get(i), endIndexes.get(i)); 
+			placeholders.add(Placeholder.parseRawContents(placeholderRawContents));
 		}
 	}
 
@@ -106,7 +108,7 @@ public class SnippetDefinition {
 		return PARAMETER_START_REGEX_SAFE + this.name + PARAMETER_END_REGEX_SAFE;
 	}
 
-	public List<String> getPlaceHolders() {
+	public List<Placeholder> getPlaceHolders() {
 		return placeholders;
 	}
 

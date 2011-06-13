@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import ehe.gordon.model.Placeholder;
 import ehe.gordon.ui.TemplateSelector;
 
 /**
@@ -75,15 +76,15 @@ public class TemplateSelectorController {
 
 		templateSelector.clearChildSelectors();
 		if (templateSelector.getSnippetImplementation() != null) {
-			List<String> placeholders = templateSelector
+			List<Placeholder> placeholders = templateSelector
 					.getSnippetImplementation().getPlaceHolders();
 
-			for (String placeholder : placeholders) {
+			for (Placeholder placeholder : placeholders) {
 				// need to get input from the user
 				TemplateSelector childTemplate = new TemplateSelector(
 						this.sourceProvider, templateSelector,
 						"no help sorry...");
-				childTemplate.setSnippetName(placeholder);
+				childTemplate.setPlaceholder(placeholder);
 				templateSelector.addChildSelector(childTemplate);
 			}
 		}

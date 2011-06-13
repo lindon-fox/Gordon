@@ -1,0 +1,88 @@
+{floating div|bold_label=difficulty |label=*}{medium entry|label=*}{medium entry|label=*}
+1~I jump.~You jump.
+1~You cook.~I cook.
+1~I run.~You run.
+1~They sing.~They sing.
+1~You swim.~I swim.
+1~I walk.~You walk.
+1~You dance.~I dance.
+1~I sleep.~You sleep.
+1~He plays tennis.~He plays tennis.
+1~She plays the piano.~She plays the piano.
+1~He plays baseball.~He plays baseball.
+1~She plays guitar.~She plays guitar.
+1~I eat sukiyaki.~You eat sukiyaki.
+1~Nana eats sukiyaki.~Nana eats sukiyaki.
+1~They ran fast.~They ran fast.
+1~You play soccer well~I play soccer well.
+1~You study really hard~I study really hard.
+1~They sing very well.~They sing very well.
+1~You swim very fast.~I swim very fast.
+1~I walk too slow.~You walk too slow.
+1~I come to school by bike.~You come to school by bike.
+1~I don't have a car now.~You don't have a car now.
+1~What do you have for breakfast?~What do I have for breakfast?
+1~You have a dog.~I have a dog.
+1~We have English on Monday.~We have English on Monday.
+1~This is my country.~This is your country.
+1~I play baseball.~You play baseball.
+1~I want a car.~You want a car.
+1~What do you do after school?~What do I do after school?
+1~Does she like Kabuki?~Does she like Kabuki?
+1~Yuki does not speak Chinese.~Yuki does not speak Chinese.
+1~I got up at seven.~You got up at seven.
+1~You got to school at eight.~I got to school at eight.
+1~I leave home at seven fifty.~You leave home at seven fifty.
+1~Do you see that woman?~Do I see that woman?
+1~I am in London.~You are in London.
+1~I came back last night.~You came back last night.
+1~I am in China.~You are in China.
+1~I like potatoes.~You like potatoes.
+1~Tomoki likes potatoes.~Tomoki likes potatoes.
+1~Tomoki loves potatoes.~Tomoki loves potatoes.
+2~You show me.~I show you.
+2~I know you.~You know me.
+2~I help you.~You help me.
+2~You tell me.~I tell you.
+2~You teach them.~I teach them.
+2~They show you.~They show me.
+2~I show him a book.~You show him a book.
+2~You play her a song~I play her a song.
+2~I dance with him.~You dance with him.
+2~She dances with you~She dances with me.
+2~I gave them a book.~You gave them a book.
+2~They gave me a frog.~They gave you a frog.
+2~They like her.~They like her.
+2~What did Tomoya give you?~What did Tomoya give me?
+2~What did I give Amina?~What did you give Amina?
+2~Akane is helping Aika in the kitchen.~Akane is helping Aika in the kitchen.
+2~I am helping Satoshi in the garden.~You are helping Satoshi in the garden.
+2~I called my family in London.~You called your family in London.
+2~She told me.~She told you.
+2~I am Tomoya.~You are Tomoya.
+2~I like Tsukasa.~You like Tsukasa.
+2~You like me.~I like you.
+2~She showed me.~She showed you.
+2~He helped you.~He helped me.
+2~They gave it to you.~The gave it to me.
+2~I see Aoi.~You see Aoi.
+2~May I ask you a favor?~May you ask me a favor?
+2~I asked him a question.~You asked him a question.
+2~I hope to hear from you soon.~You hope to hear from me soon.
+2~I see you.~You see me.
+3~I show you my passport.~You show me your passport.
+3~You give me your book.~I give you my book.
+3~I am going to show you my pictures.~You are going to show me your pictures.
+3~She is going to give us her sweets.~She is going to give us her sweets.
+3~Takumi gave you my food.~Takumi gave me your food.
+3~I showed Rina my homework.~You showed Rina your homework. 
+3~Hirotaka did not show me his new DS.~Hirotaka did not show you his new DS.
+3~I will not give you my cake.~You will not give me your cake.
+3~Can you help me with my homework?~Can I help you with your homework?
+3~Can you help Hirotaka with his homework?~Can I help Hirotaka with his homework?
+3~Can Rei help me with my homework?~Can Rei help you with your homework?
+3~Can you help me with my homework now?~Can I help you with your homework now?
+3~I will help you with your homework.~You will help me with my homework.
+3~I will help Kana with her homework.~You will help Kana with her homework.
+3~Noa will help me with my homework.~Noa will help you with your homework.
+3~Yamato will help you with your homework.~Yamato will help me with my homework.

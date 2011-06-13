@@ -1,0 +1,26 @@
+{image row with directory|width=|height=|image_name=*|image_path=C:\Documents and Settings\TC05\デスクトップ\Johnny\english pictures\food\output\}{info entry|label=*}
+takoyaki.jpg~takoyaki
+tekkadon.jpg~tekkadon
+udon.jpg~udon
+sekihan.jpg~sekihan
+rice omelette.jpg~rice omelette
+salmon teriyaki.jpg~salmon teriyaki
+osechi.jpg~osechi
+oshiruko.jpg~oshiruko
+okonomiyaki.jpg~okonomiyaki
+natto.jpg~natto
+melon bread.jpg~melon bread
+katsudon.jpg~katsudon
+gyoza.jpg~gyoza
+curry and rice.jpg~curry and rice
+chimaki.jpg~chimaki
+botamochi.jpg~botamochi
+curry bread.jpg~curry bread
+dango.jpg~dango
+Hayashi rice.jpg~hayashi rice
+kakigori.jpg~kakigori
+mochi.jpg~mochi
+soba.jpg~soba
+somen.jpg~somen
+prawn tempura.jpg~prawn tempura
+ramen.jpg~ramen

@@ -20,6 +20,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import ehe.gordon.io.DataInputLoader;
+import ehe.gordon.model.Placeholder;
+import ehe.gordon.model.Placeholder.PlaceholderType;
 import ehe.gordon.model.RepeaterFactory;
 import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.model.SnippetProxy;
@@ -235,7 +237,7 @@ public class TemplateSelector extends JPanel {
 			else{
 				DataInputLoader inputLoader = new DataInputLoader(
 						sourceProvider.getSnippetDefinitionMap(), inputPath);
-				need to get a value from the user for the number of columns
+				//TODO need to get a value from the user for the number of columns
 				SnippetProxy snippetProxy = new SnippetProxy(snippetName,
 						RepeaterFactory.createTableSnippet(5, inputLoader,
 								sourceProvider.getSnippetDefinitionMap()));
@@ -280,10 +282,28 @@ public class TemplateSelector extends JPanel {
 		templateTextField.setText(text);
 	}
 
-	public void setSnippetName(String snippetName) {
-		this.snippetName = snippetName;
-		descriptionLabel.setText("<html><b>" + snippetName
-				+ " parameter: </b></html>");
+	public void setPlaceholder(Placeholder placeholder) {
+		this.snippetName = placeholder.getName();
+		descriptionLabel.setText("<html><b>" + placeholder.getName()
+				+ ": </b></html>");
+		switch (placeholder.getPlaceholderType()) {
+		case DataList:
+			dataFileRadioButton.setSelected(true);
+			dataFileTextField.setText(placeholder.getDefaultValue());
+			break;
+		case Template:
+			templateRadioButton.setSelected(true);
+			templateTextField.setText(placeholder.getDefaultValue());
+			break;
+		case Value:
+			valueRadioButton.setSelected(true);
+			valueTextField.setText(placeholder.getDefaultValue());
+			break;
+		default:
+			System.err.println("The placeholder type was not recognised...  " + placeholder.getPlaceholderType());
+			break;
+		}
+		recalculateCurrentSnippetImplementationSelection();
 	}
 
 	public SnippetImplementation getSnippetImplementation() {
@@ -314,13 +334,6 @@ public class TemplateSelector extends JPanel {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "[snippetName = " + snippetName + ", snippetImplementation = "
-				+ ((snippetImplementation != null) ? "yes" : "no")
-				+ ",parent = " + ((parent != null) ? "yes" : "no") + "]";
-	}
-
 	public void clearChildSelectors() {
 		childPanel.removeAll();
 	}
@@ -348,5 +361,12 @@ public class TemplateSelector extends JPanel {
 		public void focusGained(FocusEvent e) {
 			
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "[snippetName = " + snippetName + ", snippetImplementation = "
+				+ ((snippetImplementation != null) ? "yes" : "no")
+				+ ",parent = " + ((parent != null) ? "yes" : "no") + "]";
 	}
 }
