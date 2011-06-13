@@ -115,4 +115,14 @@ public class SnippetDefinitionMap {
 		return snippetDefinitionMap.containsKey(snippetName);
 	}
 
+	public void replaceSnippetMap(
+			HashMap<String, SnippetDefinition> newSnippetDefinitions) {
+		snippetDefinitionMap.clear();
+		snippetDefinitionMap.putAll(newSnippetDefinitions);
+	}
+
+	public Object[] getSnippetNames() {
+		return snippetDefinitionMap.keySet().toArray();
+	}
+
 }

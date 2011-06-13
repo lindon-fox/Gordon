@@ -8,6 +8,7 @@ import javax.swing.JFileChooser;
 
 import ehe.gordon.io.HTMLSnippetLoader;
 import ehe.gordon.model.SnippetDefinition;
+import ehe.gordon.model.SnippetDefinitionMap;
 import ehe.gordon.ui.TemplateDirectoryBrowser;
 /**
  * TODO eventually the default file template of this wil lbe page. From there, it will select the tempates to fill that template.
@@ -18,11 +19,13 @@ public class TemplateDirectoryBrowserController {
 
 
 	private TemplateDirectoryBrowser templateDirectoryBrowser;
-	private HashMap<String, SnippetDefinition> snippetMap;
+//	private HashMap<String, SnippetDefinition> snippetMap;
+	private SnippetDefinitionMap snippetDefinitionMap;
 
 
 	public TemplateDirectoryBrowserController(TemplateDirectoryBrowser templateDirectoryBrowser) {
 		this.templateDirectoryBrowser = templateDirectoryBrowser;
+		this.snippetDefinitionMap = new SnippetDefinitionMap(new HashMap<String, SnippetDefinition>());//init with empty hash map to show no items yet...
 	}
 
 	public void initialise() {
@@ -55,15 +58,15 @@ public class TemplateDirectoryBrowserController {
 		if (directory != null) {
 			HTMLSnippetLoader snippetLoader = new HTMLSnippetLoader(
 					directory.getAbsolutePath());
-			snippetMap = snippetLoader.loadSnippets();
+			snippetDefinitionMap.replaceSnippetMap(snippetLoader.loadSnippets());
 		}
 	}
 
 	public File getCurrentDirectory(){
 		return templateDirectoryBrowser.getDirectory();
 	}
-
-	public HashMap<String, SnippetDefinition> getSnippetMap() {
-		return snippetMap;
+	
+	public SnippetDefinitionMap getSnippetDefinitionMap(){
+		return snippetDefinitionMap;
 	}
 }

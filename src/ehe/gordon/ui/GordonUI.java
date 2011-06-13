@@ -1,6 +1,7 @@
 package ehe.gordon.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,7 +9,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import ehe.gordon.Gordon;
@@ -32,42 +37,66 @@ public class GordonUI extends JFrame {
 	}
 
 	private void initiGUI() {
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 		controller = new GordonUIController(this);
 
-		this.getContentPane().setLayout(new BorderLayout());
+		// //////////////////////////////////////////////////
+		// MENU
+		// //////////////////////////////////////////////////
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		JMenu menu = new JMenu("Tools (not much)");
+		menuBar.add(menu);
+		JMenuItem runImageResizerMenuItem = new JMenuItem("Image resize...");
+		menu.add(runImageResizerMenuItem);
+		runImageResizerMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ResizeMultipleImageWindow resizer = new ResizeMultipleImageWindow(null);
+			}
+		});
 
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		JScrollPane scrollPanel = new JScrollPane(mainPanel);
+		this.getContentPane().setLayout(new BorderLayout());
+		this.add(scrollPanel, BorderLayout.CENTER);
 		// //////////////////////////////////////////////////
 		// HEADER PANEL
 		// //////////////////////////////////////////////////
 		JPanel headerPanel = new JPanel();
-		this.add(headerPanel, BorderLayout.NORTH);
-		JLabel pageLabel = new JLabel("Using the default page template... " + gordon.getDefaultPageSnippet().getName());
+		mainPanel.add(headerPanel, BorderLayout.NORTH);
+		JLabel pageLabel = new JLabel("Using the default page template... " + gordon.getDefaultPageSnippet().getName() + "");
 		headerPanel.add(pageLabel);
 		// //////////////////////////////////////////////////
 		// CONTENT PANEL
 		// //////////////////////////////////////////////////
 		JPanel contentPanel = new JPanel(new BorderLayout());
-		this.add(contentPanel, BorderLayout.CENTER);
+		mainPanel.add(contentPanel, BorderLayout.SOUTH);
 		baseTemplateDirectoryBrowser = new TemplateDirectoryBrowser("The directory where all the templates are stored.");
 		baseTemplateDirectoryBrowser.setDescriptionLabel("template folder: ");
 		baseTemplateDirectoryBrowser
 				.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates");
 		contentPanel.add(baseTemplateDirectoryBrowser, BorderLayout.NORTH);
 		baseTemplateTemplateSelector = new TemplateSelector(
-				baseTemplateDirectoryBrowser.getController(),
+				baseTemplateDirectoryBrowser.getController(), null, 
 				"The .inc file that defines the body of the page. This is the base template.");
-		baseTemplateTemplateSelector.setDescriptionLabel("base template: ");
+		baseTemplateTemplateSelector.setSnippetName("body");//body
 		// baseTemplateTemplateSelector.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates\\generic_body.inc");
 		contentPanel.add(baseTemplateTemplateSelector, BorderLayout.SOUTH);
-
+		
 		// //////////////////////////////////////////////////
 		// FOOTER PANEL
 		// //////////////////////////////////////////////////
 		JPanel footerPanel = new JPanel();
+		footerPanel.setBackground(Color.WHITE);
+		footerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		footerPanel.setLayout(new BorderLayout());
 		this.add(footerPanel, BorderLayout.SOUTH);
 		
-		JLabel fileNameLabel = new JLabel("output file name: ");
+		
+		JLabel fileNameLabel = new JLabel("<html><b>Ready?</b> output file name:&nbsp;</html>");
 		footerPanel.add(fileNameLabel, BorderLayout.WEST);
 		fileNameTextField = new JTextField("test.html");
 		footerPanel.add(fileNameTextField, BorderLayout.CENTER);
@@ -80,16 +109,16 @@ public class GordonUI extends JFrame {
 			}
 		});
 		footerPanel.add(runButton, BorderLayout.EAST);
-		footerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		// //////////////////////////////////////////////////
 		// frame properties
 		// //////////////////////////////////////////////////
-		this.setSize(500, 400);
+		this.setSize(700, 400);
 		this.setMinimumSize(getSize());
 		this.setTitle("Gordon");
 		this.setVisible(true);
 	}
+
 
 	public TemplateDirectoryBrowser getBaseTemplateDirectoryBrowser() {
 		return baseTemplateDirectoryBrowser;

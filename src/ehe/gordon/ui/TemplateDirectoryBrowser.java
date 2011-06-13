@@ -2,7 +2,6 @@ package ehe.gordon.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -19,8 +18,8 @@ import ehe.gordon.ui.controller.TemplateDirectoryBrowserController;
 public class TemplateDirectoryBrowser extends JPanel {
 
 	private JLabel descriptionLabel;
-	private JTextField templateTextField;
-	private JButton templateChooserButton;
+	private JTextField directoryTextField;
+	private JButton directoryChooserButton;
 	private TemplateDirectoryBrowserController controller;
 	private File directory = null;
 
@@ -43,22 +42,25 @@ public class TemplateDirectoryBrowser extends JPanel {
 		this.add(descriptionLabel, BorderLayout.WEST);
 		
 		
-		templateTextField = new JTextField();
-		templateTextField.setEditable(false);
-		templateTextField.setBackground(Color.decode("#ECF6FF"));
-		templateTextField.setForeground(Color.darkGray);
-		this.add(templateTextField, BorderLayout.CENTER);
+		directoryTextField = new JTextField();
+		directoryTextField.setEditable(false);
+		directoryTextField.setBackground(Color.decode("#ECF6FF"));
+		directoryTextField.setForeground(Color.darkGray);
+//		JPanel centerPanel = new JPanel();
+//		centerPanel.add(directoryTextField);
+//		this.add(centerPanel, BorderLayout.CENTER);
+		this.add(directoryTextField, BorderLayout.CENTER);
 		JPanel eastPanel = new JPanel(new BorderLayout());
 		this.add(eastPanel, BorderLayout.EAST);
 
-		templateChooserButton = new JButton("browse...");
-		templateChooserButton.addActionListener(new ActionListener() {
+		directoryChooserButton = new JButton("browse...");
+		directoryChooserButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.userChoosingNewTemplate(e);
 			}
 		});
-		eastPanel.add(templateChooserButton, BorderLayout.WEST);
+		eastPanel.add(directoryChooserButton, BorderLayout.WEST);
 		JButton helpButton = new JButton("<html><u>?</u></html>");
 		helpButton.setForeground(Color.blue);
 		helpButton.setOpaque(false);
@@ -76,7 +78,7 @@ public class TemplateDirectoryBrowser extends JPanel {
 	}
 
 	public void setTextFieldText(String text) {
-		templateTextField.setText(text);
+		directoryTextField.setText(text);
 	}
 
 	public void setDescriptionLabel(String text) {
@@ -95,10 +97,10 @@ public class TemplateDirectoryBrowser extends JPanel {
 		this.directory = file;
 		if (file == null) {
 			this.setTextFieldText("empty");
-			this.templateTextField.setToolTipText("not yet set...");
+			this.directoryTextField.setToolTipText("not yet set...");
 		} else {
 			this.setTextFieldText(file.getName());
-			this.templateTextField.setToolTipText(file.getAbsolutePath());
+			this.directoryTextField.setToolTipText(file.getAbsolutePath());
 		}
 		controller.newDirectorySetActionEvent(file);
 	}

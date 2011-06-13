@@ -51,7 +51,6 @@ public class SnippetDefinition {
 		List<Integer> endIndexes = createIndexListOfOccurances(PARAMETER_END, true);
 		for (int i = 0; i < startIndexes.size(); i++) {
 			placeholders.add(getRawContents().substring(startIndexes.get(i), endIndexes.get(i)));
-			System.out.println(placeholders.get(i));
 		}
 	}
 

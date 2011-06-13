@@ -3,20 +3,22 @@ package ehe.gordon.ui.controller;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import ehe.gordon.ui.TemplateSelector;
+
 /**
- * TODO eventually the default file template of this wil lbe page. From there, it will select the tempates to fill that template.
+ * TODO eventually the default file template of this wil lbe page. From there,
+ * it will select the tempates to fill that template.
+ * 
  * @author Boy.pockets
- *
+ * 
  */
 public class TemplateSelectorController {
 
-
 	private TemplateSelector templateSelector;
 	private TemplateDirectoryBrowserController sourceProvider;
-
 
 	public TemplateSelectorController(TemplateSelector templateSelector,
 			TemplateDirectoryBrowserController sourceProvider) {
@@ -26,17 +28,64 @@ public class TemplateSelectorController {
 
 	public void userChoosingNewTemplate(ActionEvent e) {
 		assert sourceProvider != null;
-		Object[] options = sourceProvider.getSnippetMap().keySet().toArray();
-		Object result = JOptionPane.showInputDialog(this.templateSelector, "Select a template", "Template select", JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-		templateSelector.setSnippetDefinition(sourceProvider.getSnippetMap().get(result));
+		Object[] options = sourceProvider.getSnippetDefinitionMap()
+				.getSnippetNames();
+		Object result = JOptionPane.showInputDialog(this.templateSelector,
+				"Select a template", "Template select",
+				JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+		if (result != null) {
+			String snippetName = result.toString();
+			newSnippetNameSelected(snippetName);
+		} else {
+			// do nothing
+		}
+	}
+
+	public void newSnippetNameSelected(String snippetName) {
+		if (sourceProvider.getSnippetDefinitionMap().isLoadedSnippet(
+				snippetName)) {
+			templateSelector.setSnippetSelectedValue(sourceProvider
+					.getSnippetDefinitionMap().createSnippetImplementation(
+							snippetName));
+		}
+		else if (snippetName == null || snippetName.equals("")) {
+			templateSelector.setSnippetSelectedValue(null);
+		} else {
+			throw new IllegalArgumentException(
+					"the snippet name could not be found in the snippet definition map... ("
+							+ snippetName + ")");
+		}
+	}
+
+	public void userChoosingNewDataFile(ActionEvent e) {
+		assert sourceProvider != null;
+		JFileChooser dataFileChooser = new JFileChooser();
+		int result = dataFileChooser.showOpenDialog(this.templateSelector);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			String path = dataFileChooser.getSelectedFile().getAbsolutePath();
+			this.templateSelector.setDataFileValue(path);
+		} else {
+			// nothing to do...
+			System.out.println("aprove option not selected...");
+		}
 	}
 
 	public void newSnippetDefinitionSetActionEvent() {
-		//want to check out the snippet, see how many parameters it has...
-		List<String> placeholders = templateSelector.getSnippetDefinition().getPlaceHolders();
-		for (String placeholder : placeholders) {
-			//need snippets for these:
-			System.out.println(placeholder);
+
+		templateSelector.clearChildSelectors();
+		if (templateSelector.getSnippetImplementation() != null) {
+			List<String> placeholders = templateSelector
+					.getSnippetImplementation().getPlaceHolders();
+
+			for (String placeholder : placeholders) {
+				// need to get input from the user
+				TemplateSelector childTemplate = new TemplateSelector(
+						this.sourceProvider, templateSelector,
+						"no help sorry...");
+				childTemplate.setSnippetName(placeholder);
+				templateSelector.addChildSelector(childTemplate);
+			}
 		}
 	}
 }
