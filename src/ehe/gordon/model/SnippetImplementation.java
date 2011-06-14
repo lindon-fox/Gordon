@@ -40,6 +40,10 @@ public class SnippetImplementation extends SnippetDefinition {
 		this.subSnippets.add(subSnippet);
 	}
 
+	public void clearAllSubSnippets(){
+		this.subSnippets.clear();
+	}
+	
 	/**
 	 * @return the contents after the <code>rawContents</code> had its
 	 *         placeholders replaced by the available subSnippets (parameters).
@@ -50,12 +54,13 @@ public class SnippetImplementation extends SnippetDefinition {
 	 * 
 	 */
 	public String getContents() {
-		String contents = getRawContents();
+		String contents = getParameterSafeRawContents();
 		for (SnippetImplementation subSnippet : subSnippets) {
 			contents = substitute(contents, subSnippet);
 		}
 		return contents.toString();
 	}
+
 
 	/**
 	 * @param contents

@@ -25,7 +25,7 @@ public class SnippetDefinition {
 		super();
 		this.name = name;
 		setRawContents(rawContents);
-		placeholders = new ArrayList<Placeholder>();
+//		placeholders = new ArrayList<Placeholder>();
 	}
 
 	public String getName() {
@@ -39,6 +39,17 @@ public class SnippetDefinition {
 	public String getRawContents() {
 		return rawContents;
 	}
+	
+
+	protected String getParameterSafeRawContents() {
+		String parameterSafeContents = rawContents;
+		for (Placeholder placeholder : placeholders) {
+			String lookingToReplace = getPlaceholderAsParameterWithValuesRegexSafe(placeholder);
+			String withThis = getPlaceholderAsParameterRegexSafe(placeholder);
+			parameterSafeContents.replace(lookingToReplace, withThis);
+		}
+		return parameterSafeContents;
+	}
 
 	public void setRawContents(String contents) {
 		this.rawContents = contents;
@@ -47,6 +58,7 @@ public class SnippetDefinition {
 
 	private void recalculatePlaceholders() {
 		placeholders = new ArrayList<Placeholder>();
+//		why is this not working?
 		assert placeholdersAreValid();
 		List<Integer> startIndexes = createIndexListOfOccurances(PARAMETER_START, false);
 		List<Integer> endIndexes = createIndexListOfOccurances(PARAMETER_END, true);
@@ -106,6 +118,18 @@ public class SnippetDefinition {
 	 */
 	protected String getNameAsParameterRegexSafe() {
 		return PARAMETER_START_REGEX_SAFE + this.name + PARAMETER_END_REGEX_SAFE;
+	}
+	
+	protected String getPlaceholderAsParameterRegexSafe(Placeholder placeholder) {
+		return PARAMETER_START_REGEX_SAFE + placeholder.getName() + PARAMETER_END_REGEX_SAFE;
+	}
+	/**
+	 * 
+	 * @return like <code>getNameAsParameterRegexSafe</code>, but also looking for
+	 * values, so will return this: <code>{{{snippetName|*}}}</code>
+	 */
+	protected String getPlaceholderAsParameterWithValuesRegexSafe(Placeholder placholder){
+		return PARAMETER_START_REGEX_SAFE + placholder.getName() + "\\|.*" + PARAMETER_END_REGEX_SAFE;
 	}
 
 	public List<Placeholder> getPlaceHolders() {

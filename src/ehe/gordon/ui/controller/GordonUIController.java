@@ -3,6 +3,7 @@ package ehe.gordon.ui.controller;
 import java.io.File;
 
 import ehe.gordon.io.HTMLSnippetWriter;
+import ehe.gordon.model.Placeholder;
 import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.model.SnippetProxy;
 import ehe.gordon.ui.GordonUI;
@@ -37,6 +38,23 @@ public class GordonUIController {
 		
 		HTMLSnippetWriter htmlSnippetWriter = new HTMLSnippetWriter();
 		htmlSnippetWriter.writeSnippet(pageSnippet, outputFileName);
+	}
+	
+	/**
+	 * TODO: 
+	 * 1. do the save as is
+	 * 2. do the load
+	 * 3. bundle the resources in a seperate folder so they can be moved easily.
+	 * 	/name.gordon.Resources
+	 *  /"/templates
+	 *  /"/data files
+	 *  Note, resources like pictures that are referenced will have to be already in the resources folder for this to work.
+	 */
+	public void saveActionRequested() {
+		//get all of the Placeholders and save them
+		//For now, everything can be saved via placeholders, though this may change in the future...
+		Placeholder placeholder = gordonUI.getBaseTemplateTemplateSelector().getPlaceholder();
+		System.out.println(placeholder);
 	}
 	
 }

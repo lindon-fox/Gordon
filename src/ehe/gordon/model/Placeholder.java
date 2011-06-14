@@ -62,21 +62,26 @@ public class Placeholder {
 			}
 			name = placeholderRawContents.substring(0, defaultValueMarkerIndex);
 			defaultValue = placeholderRawContents.substring(
-					defaultValueMarkerIndex, typeMarkerIndex);
-			if(defaultValue.equals("\"")){
+					defaultValueMarkerIndex + 1, typeMarkerIndex);
+			if (defaultValue.equals("\"")) {
 				defaultValue = name;
 			}
-			try{
-			placeholderType = Enum.valueOf(PlaceholderType.class,
-					placeholderRawContents.substring(typeMarkerIndex,
-							placeholderRawContents.length()));
-			}
-			catch(Exception e){
-				System.err.println("The placeholder type was not recognised: "+ placeholderRawContents
-								+ ". "
-								+ examplePlaceholder);
+			String placeholderTypeValue = placeholderRawContents.substring(
+					typeMarkerIndex + 1, placeholderRawContents.length());
+			try {
+				placeholderType = Enum.valueOf(PlaceholderType.class,
+						placeholderTypeValue);
+			} catch (Exception e) {
+				System.err.println("The placeholder type ("
+						+ placeholderTypeValue + ") was not recognised: "
+						+ placeholderRawContents + ". " + examplePlaceholder);
 			}
 		}
 		return new Placeholder(name, defaultValue, placeholderType);
+	}
+	
+	@Override
+	public String toString() {
+		return "{{{"+name+"|"+defaultValue+"`"+placeholderType.toString()+"}}}";
 	}
 }

@@ -1,12 +1,14 @@
 package ehe.gordon.ui.controller;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import ehe.gordon.model.Placeholder;
+import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.ui.TemplateSelector;
 
 /**
@@ -62,6 +64,12 @@ public class TemplateSelectorController {
 	public void userChoosingNewDataFile(ActionEvent e) {
 		assert sourceProvider != null;
 		JFileChooser dataFileChooser = new JFileChooser();
+		
+		String currentValue = templateSelector.getDataFileTextFieldText();
+		File currentFile = new File(currentValue);
+		if(currentFile.exists()){
+			dataFileChooser.setCurrentDirectory(currentFile);
+		}
 		int result = dataFileChooser.showOpenDialog(this.templateSelector);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			String path = dataFileChooser.getSelectedFile().getAbsolutePath();

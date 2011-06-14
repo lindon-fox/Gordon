@@ -131,7 +131,6 @@ public class ResizeMultipleImageWindow extends JFrame {
 			}
 			writeToLog("completed all files.");
 		} else {
-
 			log.setText("No files selected");
 			return;
 		}

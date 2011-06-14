@@ -10,6 +10,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -78,6 +79,13 @@ public class TemplateSelector extends JPanel {
 	// JPanel and Component methods
 	// ////////////////////////////////////////////////
 	private void initialise() {
+		if (parent == null) {
+			this.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0,
+					Color.LIGHT_GRAY));
+		} else {
+			this.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0,
+					Color.LIGHT_GRAY));
+		}
 		JPanel mainPanel = new JPanel(new FlowLayout());
 		descriptionLabel = new JLabel("");
 		// descriptionLabel.setFont(descriptionLabel.getFont().)
@@ -216,8 +224,22 @@ public class TemplateSelector extends JPanel {
 		recalculateCurrentSnippetImplementationSelection();
 	}
 
-	private void recalculateCurrentSnippetImplementationSelection() {
+	private PlaceholderType getPlaceholderType() {
 		if (valueRadioButton.isSelected()) {
+			return PlaceholderType.Value;
+		} else if (dataFileRadioButton.isSelected()) {
+			return PlaceholderType.DataList;
+		} else if (templateRadioButton.isSelected()) {
+			return PlaceholderType.Template;
+		} else {
+			throw new IllegalStateException(
+					"The value radio button or the data file radio button was expected to be selected, but neither was...");
+		}
+	}
+
+	private void recalculateCurrentSnippetImplementationSelection() {
+		switch (getPlaceholderType()) {
+		case Value:
 			String userInput = getValueUserInput();
 			if (userInput == null || userInput.equals("")) {
 				setSnippetImplementation(null);
@@ -226,27 +248,29 @@ public class TemplateSelector extends JPanel {
 						this.snippetName, userInput);
 				setSnippetImplementation(valueSnippet);
 			}
-		} else if (dataFileRadioButton.isSelected()) {
+			break;
+		case DataList:
 			// TODO eventually make a user selected value to dictate how the
 			// data file is turned into a snippet
 			String inputPath = dataFileTextField.getText();
 			// TODO some validation please...
-			if(inputPath == null || inputPath.equals("")){
+			if (inputPath == null || inputPath.equals("")) {
 				setSnippetImplementation(null);
-			}
-			else{
+			} else {
 				DataInputLoader inputLoader = new DataInputLoader(
 						sourceProvider.getSnippetDefinitionMap(), inputPath);
-				//TODO need to get a value from the user for the number of columns
+				// TODO need to get a value from the user for the number of
+				// columns
 				SnippetProxy snippetProxy = new SnippetProxy(snippetName,
 						RepeaterFactory.createTableSnippet(5, inputLoader,
 								sourceProvider.getSnippetDefinitionMap()));
 				setSnippetImplementation(snippetProxy);
 			}
-			
-		} else if (templateRadioButton.isSelected()) {
+			break;
+		case Template:
 			controller.newSnippetNameSelected(templateTextField.getText());
-		} else {
+			break;
+		default:
 			throw new IllegalStateException(
 					"The value radio button or the data file radio button was expected to be selected, but neither was...");
 		}
@@ -263,10 +287,10 @@ public class TemplateSelector extends JPanel {
 	public void setSnippetSelectedValue(
 			SnippetImplementation snippetImplementation) {
 		if (snippetImplementation != null) {
-			setTextFieldText(snippetImplementation.getName());
+			setTemplateTextFieldText(snippetImplementation.getName());
 			setSnippetImplementation(snippetImplementation);
 		} else {
-			setTextFieldText("");
+			setTemplateTextFieldText("");
 			setSnippetImplementation(null);
 		}
 	}
@@ -278,8 +302,27 @@ public class TemplateSelector extends JPanel {
 		recalculateLayout();
 	}
 
-	public void setTextFieldText(String text) {
+	public void setTemplateTextFieldText(String text) {
 		templateTextField.setText(text);
+	}
+
+	public Placeholder getPlaceholder() {
+		String defaultValue;
+		PlaceholderType placeholderType = getPlaceholderType();
+		switch (placeholderType) {
+		case Value:
+			defaultValue = getValueUserInput();
+			break;
+		case DataList:
+			defaultValue = getDataFileTextFieldText();
+			break;
+		case Template:
+			defaultValue = templateTextField.getText();
+			break;
+		default:
+			throw new IllegalArgumentException("Placeholder type, " + placeholderType + " not recognised.");
+		}
+		return new Placeholder(snippetName, defaultValue, placeholderType);
 	}
 
 	public void setPlaceholder(Placeholder placeholder) {
@@ -288,19 +331,20 @@ public class TemplateSelector extends JPanel {
 				+ ": </b></html>");
 		switch (placeholder.getPlaceholderType()) {
 		case DataList:
-			dataFileRadioButton.setSelected(true);
-			dataFileTextField.setText(placeholder.getDefaultValue());
+			dataFileRadioButton.doClick();
+			setDataFileTextFieldText(placeholder.getDefaultValue());
 			break;
 		case Template:
-			templateRadioButton.setSelected(true);
+			templateRadioButton.doClick();
 			templateTextField.setText(placeholder.getDefaultValue());
 			break;
 		case Value:
-			valueRadioButton.setSelected(true);
+			valueRadioButton.doClick();
 			valueTextField.setText(placeholder.getDefaultValue());
 			break;
 		default:
-			System.err.println("The placeholder type was not recognised...  " + placeholder.getPlaceholderType());
+			System.err.println("The placeholder type was not recognised...  "
+					+ placeholder.getPlaceholderType());
 			break;
 		}
 		recalculateCurrentSnippetImplementationSelection();
@@ -314,16 +358,25 @@ public class TemplateSelector extends JPanel {
 		return valueTextField.getText();
 	}
 
-	public TemplateSelectorController getController() {
-		return controller;
-	}
-
 	public void setDataFileValue(String path) {
-		dataFileTextField.setText(path);
+		setDataFileTextFieldText(path);
 		recalculateCurrentSnippetImplementationSelection();
 	}
 
+	private void setDataFileTextFieldText(String path) {
+		dataFileTextField.setText(path);
+		dataFileTextField.setToolTipText(path);
+	}
+
+	public String getDataFileTextFieldText() {
+		return dataFileTextField.getText();
+	}
+
+	/**
+	 * Forces the snippet implementations to dump all their sub snippets and to pick them up again from those below.
+	 */
 	public void organiseSubSnippets() {
+		snippetImplementation.clearAllSubSnippets();
 		for (Component childComponent : childPanel.getComponents()) {
 			if (childComponent instanceof TemplateSelector) {
 				TemplateSelector childSelector = (TemplateSelector) childComponent;
@@ -341,25 +394,24 @@ public class TemplateSelector extends JPanel {
 	public void addChildSelector(TemplateSelector childTemplate) {
 		childPanel.add(childTemplate);
 	}
-	
-	class RadioButtonActionListener implements ActionListener
-	{
+
+	class RadioButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			inputTypeSelected(e);
 		}
 	}
-	
+
 	class TextFieldFocusListener implements FocusListener {
-		
+
 		@Override
 		public void focusLost(FocusEvent e) {
 			recalculateCurrentSnippetImplementationSelection();
 		}
-		
+
 		@Override
 		public void focusGained(FocusEvent e) {
-			
+
 		}
 	}
 
@@ -367,6 +419,6 @@ public class TemplateSelector extends JPanel {
 	public String toString() {
 		return "[snippetName = " + snippetName + ", snippetImplementation = "
 				+ ((snippetImplementation != null) ? "yes" : "no")
-				+ ",parent = " + ((parent != null) ? "yes" : "no") + "]";
+				+ ",parent = " + ((parent != null) ? "yes" : "no") + ", placeholder = " + getPlaceholder().toString() + "]";
 	}
 }
