@@ -1,0 +1,46 @@
+{info entry|label=*}
+B
+bike
+train
+bus
+car
+he is
+he's
+she is
+she's
+I
+school
+hospital
+the park
+car
+cat
+dog
+CD
+necklace
+N
+Italy
+Japanese
+Chinese
+English
+South Korea
+Phillipines
+Germany
+Canada
+G
+teacher
+mother
+father
+brother
+friend
+every day
+today
+tomorrow
+O
+badminton
+piano
+guitar
+flute
+baseball
+table tennis
+volleyball
+basketball

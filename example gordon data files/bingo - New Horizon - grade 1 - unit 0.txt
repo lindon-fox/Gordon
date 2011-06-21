@@ -1,3 +1,4 @@
+
 {info entry|label=*}
 B
 coffee

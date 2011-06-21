@@ -30,9 +30,7 @@ public class SnippetDefinitionMap {
 		// just go for the info entries straight away.
 		List<InfoEntry> infoEntries = card.getInfoEntries();
 		StringBuilder infoEntriesContentsBuilder = new StringBuilder();
-		// TODO need to loop on column definitions instead of info entries. Will
-		// need to use a counter to keep up with the current column (or
-		// something)
+
 		int infoEntriesIndexCounter = 0;
 		int infoEntriesExpectedCount = card.getColumnDefinitions().getContentColumnCount();
 		for (ColumnDefinition columnDefinition : card.getColumnDefinitions()

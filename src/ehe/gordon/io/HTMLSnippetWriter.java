@@ -30,7 +30,6 @@ public class HTMLSnippetWriter {
 				try {
 					outputStreamWriter.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

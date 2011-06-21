@@ -1,0 +1,12 @@
+{sentence example with practice|heading=*|example=*}
+B~Did you come by <b>train</b>?
+B~<b>He is</b> my friend.
+I~Do you come to <b>school</b> every day?
+I~Do you want a <b>car</b>?
+N~<b>Japan</b> is my country.
+N~I want to go to <b>Australia</b>.
+N~Do you speak <b>Chinese</b>?
+G~He my <b>English teacher</b>.
+G~Do you come to school <b>everyday</b>?
+O~Do you play the <b>piano</b>?
+O~Do you play <b>soccer</b>?

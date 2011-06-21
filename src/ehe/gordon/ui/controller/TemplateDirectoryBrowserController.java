@@ -11,7 +11,6 @@ import ehe.gordon.model.SnippetDefinition;
 import ehe.gordon.model.SnippetDefinitionMap;
 import ehe.gordon.ui.TemplateDirectoryBrowser;
 /**
- * TODO eventually the default file template of this wil lbe page. From there, it will select the tempates to fill that template.
  * @author Boy.pockets
  *
  */

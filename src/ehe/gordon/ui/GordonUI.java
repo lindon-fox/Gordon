@@ -151,7 +151,7 @@ public class GordonUI extends JFrame {
 		// //////////////////////////////////////////////////
 		// frame properties
 		// //////////////////////////////////////////////////
-		this.setSize(700, 400);
+		this.setSize(800, 400);
 		this.setMinimumSize(getSize());
 		this.setTitle("Gordon");
 		this.setVisible(true);

@@ -18,7 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import ehe.gordon.io.DataInputLoader;
 import ehe.gordon.model.Placeholder;
@@ -54,6 +56,7 @@ public class TemplateSelector extends JPanel {
 	private JTextField templateTextField;
 	private JTextField valueTextField;
 	private JTextField dataFileTextField;
+	private JTextField columnsTextField;
 	private JButton templateChooserButton;
 
 	private JRadioButton valueRadioButton;
@@ -120,6 +123,7 @@ public class TemplateSelector extends JPanel {
 		// add this to a card layout
 		cards = new JPanel(new CardLayout());
 		cards.setOpaque(false);
+		cards.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
 		mainPanel.add(cards);
 		JPanel valuePanel = new JPanel();
 		JPanel dataPanel = new JPanel();
@@ -171,6 +175,7 @@ public class TemplateSelector extends JPanel {
 		dataFileTextField = new JTextField(25);
 		dataFileTextField.addFocusListener(new TextFieldFocusListener());
 		dataPanel.add(dataFileTextField);
+				
 		JButton dataFileBrowseButton = new JButton("Browse...");
 		dataFileBrowseButton.setOpaque(false);
 		dataFileBrowseButton.addActionListener(new ActionListener() {
@@ -182,6 +187,14 @@ public class TemplateSelector extends JPanel {
 		});
 		dataPanel.add(dataFileBrowseButton);
 
+		JLabel columnsLabel = new JLabel("columns:");
+		columnsLabel.setToolTipText("The number of columns in the table");
+		dataPanel.add(columnsLabel);
+		columnsTextField = new JTextField(3);
+		columnsTextField.setText("8");
+		columnsTextField.setToolTipText("The number of columns in the table");
+		dataPanel.add(columnsTextField);
+		
 		this.add(mainPanel);
 		childPanel = new JPanel();
 		childPanel.setLayout(new BoxLayout(childPanel, BoxLayout.Y_AXIS));
@@ -259,10 +272,15 @@ public class TemplateSelector extends JPanel {
 			} else {
 				DataInputLoader inputLoader = new DataInputLoader(
 						sourceProvider.getSnippetDefinitionMap(), inputPath);
-				// TODO need to get a value from the user for the number of
-				// columns
+				int columnCount = -1;
+				try{
+					columnCount = Integer.parseInt(columnsTextField.getText());
+				}
+				catch (NumberFormatException e) {
+					System.err.println("The input was not a valid number...");
+				}
 				SnippetProxy snippetProxy = new SnippetProxy(snippetName,
-						RepeaterFactory.createTableSnippet(5, inputLoader,
+						RepeaterFactory.createTableSnippet(columnCount, inputLoader,
 								sourceProvider.getSnippetDefinitionMap()));
 				setSnippetImplementation(snippetProxy);
 			}
@@ -365,7 +383,12 @@ public class TemplateSelector extends JPanel {
 
 	private void setDataFileTextFieldText(String path) {
 		dataFileTextField.setText(path);
-		dataFileTextField.setToolTipText(path);
+		if(path == null || path.equals("")){
+			dataFileTextField.setToolTipText(null);
+		}
+		else{
+			dataFileTextField.setToolTipText(path);
+		}
 	}
 
 	public String getDataFileTextFieldText() {

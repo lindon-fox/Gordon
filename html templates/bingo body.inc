@@ -8,7 +8,7 @@
 </table>
 <h1 class="bingo_heading">Let's enjoy Bingo!</h1>
 <div style="float:right;">
-	"I want to find Kenpachi. He is amazing, wonderful and fantastic."<a class="image" ><img style="height:80px;" src="file:\\C:\Documents and Settings\TC05\デスクトップ\Johnny\english pictures\for bingo\Yachiru.jpg"/></a>
+	{{{quote|""`Value}}}<a class="image" ><img style="height:{{{image height|80px`Value}}};" src="{{{image file url|file:\\C:\Documents and Settings\TC05\デスクトップ\Johnny\english pictures\for bingo\grimjaw.jpg`Value}}}"/></a>
 </div><h3>[ {{{bingo_title|Year X, Unit Y`Value}}} ]</h3>
 <table class="bingo_word_title">
 <!--word box to select words from-->

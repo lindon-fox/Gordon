@@ -31,7 +31,7 @@ public class GordonUIController {
 			System.out.println("The body template has not been selected.");
 			return;
 		}
-		
+		//get the children of the body template and add them as sub-templates
 		bodyTemplateSelector.organiseSubSnippets();
 		
 		pageSnippet.addSubSnippet(new SnippetProxy("body",bodySnippetImplementation));
@@ -41,14 +41,7 @@ public class GordonUIController {
 	}
 	
 	/**
-	 * TODO: 
-	 * 1. do the save as is
-	 * 2. do the load
-	 * 3. bundle the resources in a seperate folder so they can be moved easily.
-	 * 	/name.gordon.Resources
-	 *  /"/templates
-	 *  /"/data files
-	 *  Note, resources like pictures that are referenced will have to be already in the resources folder for this to work.
+	
 	 */
 	public void saveActionRequested() {
 		//get all of the Placeholders and save them

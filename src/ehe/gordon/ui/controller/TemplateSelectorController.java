@@ -12,8 +12,6 @@ import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.ui.TemplateSelector;
 
 /**
- * TODO eventually the default file template of this wil lbe page. From there,
- * it will select the tempates to fill that template.
  * 
  * @author Boy.pockets
  * 
@@ -69,6 +67,12 @@ public class TemplateSelectorController {
 		File currentFile = new File(currentValue);
 		if(currentFile.exists()){
 			dataFileChooser.setCurrentDirectory(currentFile);
+		}
+		else{
+			currentFile = new File("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\example gordon data files\\");
+			if(currentFile.exists()){
+				dataFileChooser.setCurrentDirectory(currentFile);
+			}
 		}
 		int result = dataFileChooser.showOpenDialog(this.templateSelector);
 		if (result == JFileChooser.APPROVE_OPTION) {
