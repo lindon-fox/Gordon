@@ -59,11 +59,11 @@ public class TemplateSelectorController {
 	public void newSnippetNameSelected(String snippetName) {
 		if (sourceProvider.getSnippetDefinitionMap().isLoadedSnippet(
 				snippetName)) {
-			templateSelector.setSnippetSelectedValue(sourceProvider
+			templateSelector.setSelectedSnippetValue(sourceProvider
 					.getSnippetDefinitionMap().createSnippetImplementation(
 							snippetName));
 		} else if (snippetName == null || snippetName.equals("")) {
-			templateSelector.setSnippetSelectedValue(null);
+			templateSelector.setSelectedSnippetValue(null);
 		} else {
 			throw new IllegalArgumentException(
 					"the snippet name could not be found in the snippet definition map... ("
@@ -72,10 +72,13 @@ public class TemplateSelectorController {
 	}
 
 	public void userChoosingNewDataFile(ActionEvent e) {
+		//we must be in DataList type for this to work...
+		assert templateSelector.getPlaceholderType() == PlaceholderType.DataList;
+		
 		assert sourceProvider != null;
 		JFileChooser dataFileChooser = new JFileChooser();
-
-		String currentValue = templateSelector.getDataFileTextFieldText();
+		
+		String currentValue = templateSelector.getUserInput();
 		File currentFile = new File(currentValue);
 		if (currentFile.exists()) {
 			dataFileChooser.setCurrentDirectory(currentFile);
@@ -89,44 +92,19 @@ public class TemplateSelectorController {
 		int result = dataFileChooser.showOpenDialog(this.templateSelector);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			String path = dataFileChooser.getSelectedFile().getAbsolutePath();
-			this.templateSelector.setDataFileTextFieldText(path);
+			this.templateSelector.setUserInput(path);
 		} else {
 			// nothing to do...
 			System.out.println("aprove option not selected...");
 		}
 	}
 
-	private SnippetImplementation getCurrentSnippetImplementationSelection() {
-		String userInput = templateSelector.getUserInputForInputType();
-		SnippetImplementation snippetImplementation = null;
-		if (userInput != null && userInput.equals("") == false) {
-			if (templateSelector.getPlaceholderType() == PlaceholderType.DataList) {
-				int columnCount = templateSelector.getColumnCountInput();
-				String inputPath = userInput;
-				DataInputLoader inputLoader = new DataInputLoader(
-						sourceProvider.getSnippetDefinitionMap(), inputPath);
-				snippetImplementation = new SnippetProxy(
-						templateSelector.getName(),
-						RepeaterFactory.createTableSnippet(columnCount,
-								inputLoader,
-								sourceProvider.getSnippetDefinitionMap()));
-			} else {
-				snippetImplementation = sourceProvider
-						.getSnippetDefinitionMap().createSnippetImplementation(
-								templateSelector.getSnippetName());
-				snippetImplementation.setRawContents(userInput);
-			}
-		}
-		return snippetImplementation;
-	}
-
 	public SnippetImplementation getSnippetImplementationWithoutChildren() {
-//		//TODO refactor these two methods into one..
-//		return getCurrentSnippetImplementationSelection();
+
 		switch (templateSelector.getPlaceholderType()) {
 		case DataList:
 			int columnCount = templateSelector.getColumnCountInput();
-			String inputPath = templateSelector.getUserInputForInputType();
+			String inputPath = templateSelector.getUserInput();
 			DataInputLoader inputLoader = new DataInputLoader(
 					sourceProvider.getSnippetDefinitionMap(), inputPath);
 			return new SnippetProxy(
@@ -135,7 +113,7 @@ public class TemplateSelectorController {
 							inputLoader,
 							sourceProvider.getSnippetDefinitionMap()));
 		case Template:
-			String name = templateSelector.getUserInputForInputType();
+			String name = templateSelector.getUserInput();
 			if (name != null && !name.equals("")) {
 				if (sourceProvider.getSnippetDefinitionMap().isLoadedSnippet(
 						name)) {
@@ -151,19 +129,17 @@ public class TemplateSelectorController {
 			}
 		case Value:
 			return new SnippetImplementation(templateSelector.getSnippetName(),
-					templateSelector.getUserInputForInputType());
+					templateSelector.getUserInput());
 		default:
 			throw new IllegalArgumentException(
 					"The placholder type was not recognised: "
 							+ templateSelector.getPlaceholderType());
 		}
-		// String name = templateSelector.getSnippetName();
-
 	}
 
 	public void newSnippetDefinitionSetActionEvent(
 			SnippetImplementation snippetImplementation) {
-		templateSelector.clearChildSelectors();
+		this.removeAllChildControllers();
 		if (snippetImplementation != null) {
 			List<Placeholder> placeholders = snippetImplementation
 					.getPlaceHolders();
@@ -177,6 +153,17 @@ public class TemplateSelectorController {
 	}
 
 	/**
+	 * Remove all the child controllers from the list and from the templateSelector.
+	 */
+	private void removeAllChildControllers() {
+		TemplateSelectorController childController;
+		while(childControllers.size() != 0){
+			childController = childControllers.remove(0);
+			templateSelector.removeChildSelector(childController.getTemplateSelector());
+		}
+	}
+
+	/**
 	 * Forces the snippet implementations to dump all their sub snippets and to
 	 * pick them up again from those below. TODO make this more like
 	 * "get snippet with children attached too..." TODO move to controller and
@@ -186,19 +173,9 @@ public class TemplateSelectorController {
 	public SnippetImplementation getSnippetSimplementationWithSubSnippets() {
 		SnippetImplementation snippetImplementation = getSnippetImplementationWithoutChildren();
 		for (TemplateSelectorController childSelectorController : childControllers) {
-			// childSelectorController.organiseSubSnippets();
 			snippetImplementation.addSubSnippet(childSelectorController
 					.getSnippetSimplementationWithSubSnippets());
 		}
-		// snippetImplementation.clearAllSubSnippets();
-		// for (Component childComponent : childPanel.getComponents()) {
-		// if (childComponent instanceof TemplateSelector) {
-		// TemplateSelector childSelector = (TemplateSelector) childComponent;
-		// childSelector.organiseSubSnippets();
-		// snippetImplementation.addSubSnippet(childSelector
-		// .getSnippetImplementation());
-		// }
-		// }
 		return snippetImplementation;
 	}
 

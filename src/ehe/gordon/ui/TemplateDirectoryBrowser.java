@@ -28,9 +28,6 @@ public class TemplateDirectoryBrowser extends JPanel {
 	public TemplateDirectoryBrowser(TemplateDirectoryBrowserController controller, String helpMessage) {
 		super(new BorderLayout());
 		initialise();
-		// TODO think about if this should be the opposite way around (ie, if
-		// the template selector should be passed in as a constructor argument
-		// for the controller.
 		this.controller = controller;
 		this.helpMessage = helpMessage;
 	}
@@ -45,9 +42,7 @@ public class TemplateDirectoryBrowser extends JPanel {
 		directoryTextField.setEditable(false);
 		directoryTextField.setBackground(Color.decode("#ECF6FF"));
 		directoryTextField.setForeground(Color.darkGray);
-//		JPanel centerPanel = new JPanel();
-//		centerPanel.add(directoryTextField);
-//		this.add(centerPanel, BorderLayout.CENTER);
+
 		this.add(directoryTextField, BorderLayout.CENTER);
 		JPanel eastPanel = new JPanel(new BorderLayout());
 		this.add(eastPanel, BorderLayout.EAST);

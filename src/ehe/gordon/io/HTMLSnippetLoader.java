@@ -15,21 +15,7 @@ import ehe.gordon.model.SnippetDefinition;
  * This class loads all the template files from a particular directory. Having
  * one and only one directory to load from and only one file extension should
  * ensure that all snippet names are unique. If not, then only one will survive
- * (ie only one of the duplicates will be used). TODO: eventually, we will want
- * to move away from this model. We want to be able to have sets of templates
- * that we can just drop in without the worry of possibly breaking other
- * templates (ie, overriding them). So we want to be able to have sub folders.
- * We also want to be able to specify more than one css file. I guess the idea
- * is that people can make their own sets and them share them with others. So
- * for that, they would want to be able to specify:
- * <ol>
- * <li>
- * The html templates (possibly including the default page)</li>
- * <li>
- * The css file</li>
- * <li>
- * ...</li>
- * </ol>
+ * (ie only one of the duplicates will be used). 
  * 
  * @author lindon-fox
  */

@@ -6,8 +6,6 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -19,23 +17,21 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import ehe.gordon.io.DataInputLoader;
 import ehe.gordon.model.Placeholder;
 import ehe.gordon.model.Placeholder.PlaceholderType;
-import ehe.gordon.model.RepeaterFactory;
 import ehe.gordon.model.SnippetImplementation;
-import ehe.gordon.model.SnippetProxy;
-import ehe.gordon.ui.controller.TemplateDirectoryBrowserController;
 import ehe.gordon.ui.controller.TemplateSelectorController;
 
+/**
+ * Change the name of this to something like SnippetSelectorControl
+ * @author Boy.pockets
+ *
+ */
 public class TemplateSelector extends JPanel {
 
 	// CONTROLLERS
-	//private TemplateSelector parent;
+	// private TemplateSelector parent;
 	private TemplateSelectorController controller;
-	//private TemplateDirectoryBrowserController sourceProvider;
-	//need to remove because we want to get the value every time...
-	//private SnippetImplementation snippetImplementation;
 
 	public final Color COLOR_EVEN = new Color(245, 243, 234);
 	public final Color COLOR_ODD = new Color(229, 223, 200);
@@ -62,7 +58,8 @@ public class TemplateSelector extends JPanel {
 	private JRadioButton dataFileRadioButton;
 	private JRadioButton templateRadioButton;
 
-	public TemplateSelector(TemplateSelectorController controller,String helpMessage) {
+	public TemplateSelector(TemplateSelectorController controller,
+			String helpMessage) {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.controller = controller;
@@ -115,7 +112,8 @@ public class TemplateSelector extends JPanel {
 		// add this to a card layout
 		cards = new JPanel(new CardLayout());
 		cards.setOpaque(false);
-		cards.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
+		cards.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0,
+				Color.LIGHT_GRAY));
 		mainPanel.add(cards);
 		JPanel valuePanel = new JPanel();
 		JPanel dataPanel = new JPanel();
@@ -165,7 +163,7 @@ public class TemplateSelector extends JPanel {
 		// data file panel
 		dataFileTextField = new JTextField(25);
 		dataPanel.add(dataFileTextField);
-				
+
 		JButton dataFileBrowseButton = new JButton("Browse...");
 		dataFileBrowseButton.setOpaque(false);
 		dataFileBrowseButton.addActionListener(new ActionListener() {
@@ -183,26 +181,73 @@ public class TemplateSelector extends JPanel {
 		columnsTextField.setText("8");
 		columnsTextField.setToolTipText("The number of columns in the table");
 		dataPanel.add(columnsTextField);
-		
+
 		this.add(mainPanel);
 		childPanel = new JPanel();
 		childPanel.setLayout(new BoxLayout(childPanel, BoxLayout.Y_AXIS));
 		this.add(childPanel);
 	}
 
-	@Override
-	public void setBackground(Color bg) {
-		super.setBackground(bg);
-		for (Component component : this.getComponents()) {
-			component.setBackground(bg);
+	/**
+	 * The defined name of the snippet who's value we are getting from the user.
+	 * 
+	 * @return
+	 */
+	public String getSnippetName() {
+		return snippetName;
+	}
+
+	/**
+	 * Given the current values of the template selector, get the placeholder.
+	 * @return
+	 */
+	public Placeholder getPlaceholder() {
+		String defaultValue;
+		PlaceholderType placeholderType = getPlaceholderType();
+		defaultValue = getUserInput();
+		return new Placeholder(snippetName, defaultValue, placeholderType);
+	}
+
+	/**
+	 * This is like settting the default value of the template selector. We get
+	 * the placeholder value from the parent snippet, and set this value when
+	 * first loaded.
+	 * 
+	 * @param placeholder
+	 */
+	public void setPlaceholder(Placeholder placeholder) {
+		this.snippetName = placeholder.getName();
+		descriptionLabel.setText("<html><b>" + placeholder.getName()
+				+ ": </b></html>");
+		switch (placeholder.getPlaceholderType()) {
+		case DataList:
+			dataFileRadioButton.doClick();
+			setUserInput(placeholder.getDefaultValue());
+			// setDataFileTextFieldText(placeholder.getDefaultValue());
+			break;
+		case Template:
+			templateRadioButton.doClick();
+			setUserInput(placeholder.getDefaultValue());
+			// templateTextField.setText(placeholder.getDefaultValue());
+			controller.newSnippetNameSelected(placeholder.getDefaultValue());
+			break;
+		case Value:
+			valueRadioButton.doClick();
+			setUserInput(placeholder.getDefaultValue());
+			// valueTextField.setText(placeholder.getDefaultValue());
+			break;
+		default:
+			System.err.println("The placeholder type was not recognised...  "
+					+ placeholder.getPlaceholderType());
+			break;
 		}
 	}
 
-	protected void inputTypeSelected(ActionEvent e) {
-		CardLayout cl = (CardLayout) (cards.getLayout());
-		cl.show(cards, (String) e.getActionCommand());
-	}
-
+	/**
+	 * a new placholder type has been selected by the controllers
+	 * 
+	 * @return
+	 */
 	public PlaceholderType getPlaceholderType() {
 		if (valueRadioButton.isSelected()) {
 			return PlaceholderType.Value;
@@ -216,7 +261,13 @@ public class TemplateSelector extends JPanel {
 		}
 	}
 
-	public String getUserInputForInputType(){
+	/***
+	 * Get the current user input. This will be different depeneding on the
+	 * input type selected by the user.
+	 * 
+	 * @return
+	 */
+	public String getUserInput() {
 		switch (getPlaceholderType()) {
 		case Value:
 			return valueTextField.getText();
@@ -229,116 +280,97 @@ public class TemplateSelector extends JPanel {
 					"The value radio button or the data file radio button was expected to be selected, but neither was...");
 		}
 	}
-	
-	public int getColumnCountInput(){
-		int columnCount = -1;
-		try{
-			columnCount = Integer.parseInt(columnsTextField.getText());
+
+	// DONE replace with getUserInput
+	// public String getDataFileTextFieldText() {
+	// return dataFileTextField.getText();
+	// }
+
+	// DONE replace with getUserInput
+	// private String getValueUserInput() {
+	// return valueTextField.getText();
+	// }
+	public void setUserInput(String userInput) {
+		switch (getPlaceholderType()) {
+		case Value:
+			valueTextField.setText(userInput);
+			break;
+		case DataList:
+			dataFileTextField.setText(userInput);
+			if (userInput == null || userInput.equals("")) {
+				dataFileTextField.setToolTipText(null);
+			} else {
+				dataFileTextField.setToolTipText(userInput);
+			}
+			break;
+		case Template:
+			templateTextField.setText(userInput);
+			break;
+		default:
+			throw new IllegalStateException(
+					"The value radio button or the data file radio button was expected to be selected, but neither was... Value: "
+							+ getPlaceholderType());
 		}
-		catch (NumberFormatException e) {
+	}
+
+	// //DONE replace with setUserInput
+	// public void setDataFileTextFieldText(String path) {
+	// dataFileTextField.setText(path);
+	// if(path == null || path.equals("")){
+	// dataFileTextField.setToolTipText(null);
+	// }
+	// else{
+	// dataFileTextField.setToolTipText(path);
+	// }
+	// }
+	// //DONE replace with setUserInput
+	// public void setTemplateTextFieldText(String text) {
+	// templateTextField.setText(text);
+	// }
+
+	/**
+	 * Get the column Count input. Only valid when getPlaceholderType is
+	 * DataList
+	 * 
+	 * @return
+	 */
+	public int getColumnCountInput() {
+		assert getPlaceholderType() == PlaceholderType.DataList;
+		int columnCount = -1;
+		try {
+			columnCount = Integer.parseInt(columnsTextField.getText());
+		} catch (NumberFormatException e) {
 			System.err.println("The input was not a valid number...");
 		}
 		return columnCount;
 	}
-	
 
-
-	public void setSnippetSelectedValue(
+	/**
+	 * A new snippet value should be displayed.
+	 * 
+	 * @param snippetImplementation
+	 */
+	public void setSelectedSnippetValue(
 			SnippetImplementation snippetImplementation) {
+		assert getPlaceholderType() == PlaceholderType.Template;
 		if (snippetImplementation != null) {
-			setTemplateTextFieldText(snippetImplementation.getName());
-			setSnippetImplementation(snippetImplementation);
+			setUserInput(snippetImplementation.getName());
+			controller
+					.newSnippetDefinitionSetActionEvent(snippetImplementation);
 		} else {
-			setTemplateTextFieldText("");
-			setSnippetImplementation(null);
+			setUserInput("");
+			controller
+					.newSnippetDefinitionSetActionEvent(snippetImplementation);
 		}
-	}
-
-	private void setSnippetImplementation(
-			SnippetImplementation snippetDefinition) {
-		//this.snippetImplementation = snippetDefinition;
-		controller.newSnippetDefinitionSetActionEvent(snippetDefinition);
 		controller.recalculateLayout();
 	}
 
-	public void setTemplateTextFieldText(String text) {
-		templateTextField.setText(text);
-	}
+	// public void removeAllChildSelectors() {
+	// childPanel.removeAll();
+	// }
 
-	public String getSnippetName() {
-		return snippetName;
-	}
-	
-	public Placeholder getPlaceholder() {
-		String defaultValue;
-		PlaceholderType placeholderType = getPlaceholderType();
-		switch (placeholderType) {
-		case Value:
-			defaultValue = getValueUserInput();
-			break;
-		case DataList:
-			defaultValue = getDataFileTextFieldText();
-			break;
-		case Template:
-			defaultValue = templateTextField.getText();
-			break;
-		default:
-			throw new IllegalArgumentException("Placeholder type, " + placeholderType + " not recognised.");
-		}
-		return new Placeholder(snippetName, defaultValue, placeholderType);
-	}
-
-	public void setPlaceholder(Placeholder placeholder) {
-		this.snippetName = placeholder.getName();
-		descriptionLabel.setText("<html><b>" + placeholder.getName()
-				+ ": </b></html>");
-		switch (placeholder.getPlaceholderType()) {
-		case DataList:
-			dataFileRadioButton.doClick();
-			setDataFileTextFieldText(placeholder.getDefaultValue());
-			break;
-		case Template:
-			templateRadioButton.doClick();
-			templateTextField.setText(placeholder.getDefaultValue());
-			controller.newSnippetNameSelected(placeholder.getDefaultValue());
-			break;
-		case Value:
-			valueRadioButton.doClick();
-			valueTextField.setText(placeholder.getDefaultValue());
-			break;
-		default:
-			System.err.println("The placeholder type was not recognised...  "
-					+ placeholder.getPlaceholderType());
-			break;
-		}
-	}
-
-//	public SnippetImplementation getSnippetImplementationWithoutSubSnippets() {
-//		//this should be "get snippet without children attached"
-//		return snippetImplementation;
-//	}
-
-	private String getValueUserInput() {
-		return valueTextField.getText();
-	}
-
-	public void setDataFileTextFieldText(String path) {
-		dataFileTextField.setText(path);
-		if(path == null || path.equals("")){
-			dataFileTextField.setToolTipText(null);
-		}
-		else{
-			dataFileTextField.setToolTipText(path);
-		}
-	}
-
-	public String getDataFileTextFieldText() {
-		return dataFileTextField.getText();
-	}
-
-
-	public void clearChildSelectors() {
-		childPanel.removeAll();
+	public void removeChildSelector(JPanel templateSelector) {
+		childPanel.remove(templateSelector);
 	}
 
 	public void addChildSelector(TemplateSelector childTemplate) {
@@ -352,10 +384,31 @@ public class TemplateSelector extends JPanel {
 		}
 	}
 
+	protected void inputTypeSelected(ActionEvent e) {
+		CardLayout cl = (CardLayout) (cards.getLayout());
+		cl.show(cards, (String) e.getActionCommand());
+	}
+
+	@Override
+	public void setBackground(Color bg) {
+		super.setBackground(bg);
+		for (Component component : this.getComponents()) {
+			component.setBackground(bg);
+		}
+	}
+
 	@Override
 	public String toString() {
-		return "[snippetName = " + snippetName + ", snippetImplementation = "
-				+ ((controller.getSnippetImplementationWithoutChildren() != null) ? "yes" : "no")
-				+ ",parent = " + ((controller.hasParent()) ? "yes" : "no") + ", placeholder = " + ((getPlaceholder() != null) ? getPlaceholder().toString() : null) + "]";
+		return "[snippetName = "
+				+ snippetName
+				+ ", snippetImplementation = "
+				+ ((controller.getSnippetImplementationWithoutChildren() != null) ? "yes"
+						: "no")
+				+ ",parent = "
+				+ ((controller.hasParent()) ? "yes" : "no")
+				+ ", placeholder = "
+				+ ((getPlaceholder() != null) ? getPlaceholder().toString()
+						: null) + "]";
 	}
+
 }

@@ -32,7 +32,8 @@ public class SnippetDefinitionMap {
 		StringBuilder infoEntriesContentsBuilder = new StringBuilder();
 
 		int infoEntriesIndexCounter = 0;
-		int infoEntriesExpectedCount = card.getColumnDefinitions().getContentColumnCount();
+		int infoEntriesExpectedCount = card.getColumnDefinitions()
+				.getContentColumnCount();
 		for (ColumnDefinition columnDefinition : card.getColumnDefinitions()
 				.getColumnDefinitions()) {
 			SnippetImplementation snippetImplementation = createSnippetImplementation(columnDefinition
@@ -40,8 +41,10 @@ public class SnippetDefinitionMap {
 			for (Parameter parameter : columnDefinition.getParameters()) {
 				String value;
 				if (parameter.valueIsVariable()) {
-					if(infoEntries.get(infoEntriesIndexCounter) == null){
-						throw new IllegalArgumentException("Was expecting there to be more info entries than supplied. Was expecting: " + infoEntriesExpectedCount);
+					if (infoEntries.get(infoEntriesIndexCounter) == null) {
+						throw new IllegalArgumentException(
+								"Was expecting there to be more info entries than supplied. Was expecting: "
+										+ infoEntriesExpectedCount);
 					}
 					value = infoEntries.get(infoEntriesIndexCounter).getLabel();
 					infoEntriesIndexCounter++;
@@ -59,36 +62,10 @@ public class SnippetDefinitionMap {
 		// need to make a 'list' snippet with all the contents of the info
 		// entries
 		SnippetImplementation infoEntriesSnippet = new SnippetImplementation(
-				"info entries", infoEntriesContentsBuilder.toString());// TODO
-																		// FIXME
-																		// eventually
-																		// this
-																		// should
-																		// be
-																		// changes,
-																		// so
-																		// that
-																		// a
-																		// 'dummy'
-																		// snippet
-																		// does
-																		// not
-																		// have
-																		// to be
-																		// used.
-																		// instead,
-																		// defin
-																		// some
-																		// way
-																		// of
-																		// handeling
-																		// lists
-																		// of
-																		// snippets.
-																		// But
-																		// for
-																		// now...
-		// add this to the tableSnippet
+				"info entries", infoEntriesContentsBuilder.toString());
+		// FIXME eventually this should be changed so that a dummy snippet does
+		// not have to be used. instead, define some way of handeling list of
+		// snippets. but for now, add this to the snippet table.
 		tableSnippet.addSubSnippet(infoEntriesSnippet);
 		return tableSnippet;
 	}
@@ -102,8 +79,8 @@ public class SnippetDefinitionMap {
 	 */
 	public SnippetImplementation createSnippetImplementation(String snippetName) {
 		if (getSnippetDefinition(snippetName) == null) {
-			throw new IllegalArgumentException("requested a snippet not supported "
-					+ snippetName);
+			throw new IllegalArgumentException(
+					"requested a snippet not supported " + snippetName);
 		}
 		return new SnippetImplementation(getSnippetDefinition(snippetName));
 	}
