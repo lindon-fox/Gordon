@@ -17,27 +17,27 @@ import ehe.gordon.model.RepeaterFactory;
 import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.model.SnippetProxy;
 import ehe.gordon.ui.TemplateNameDialog;
-import ehe.gordon.ui.TemplateSelector;
+import ehe.gordon.ui.SnippetSelectorPanel;
 
 /**
  * 
  * @author Boy.pockets
  * 
  */
-public class TemplateSelectorController {
+public class SnippetSelectorController {
 
-	private TemplateSelector templateSelector;
+	private SnippetSelectorPanel templateSelector;
 	private TemplateDirectoryBrowserController sourceProvider;
-	private TemplateSelectorController parent;
-	private List<TemplateSelectorController> childControllers;
+	private SnippetSelectorController parent;
+	private List<SnippetSelectorController> childControllers;
 
-	public TemplateSelectorController(TemplateSelectorController parent,
+	public SnippetSelectorController(SnippetSelectorController parent,
 			TemplateDirectoryBrowserController sourceProvider,
 			String helpMessage) {
 		this.sourceProvider = sourceProvider;
 		this.parent = parent;
-		this.childControllers = new ArrayList<TemplateSelectorController>();
-		this.templateSelector = new TemplateSelector(this, helpMessage);
+		this.childControllers = new ArrayList<SnippetSelectorController>();
+		this.templateSelector = new SnippetSelectorPanel(this, helpMessage);
 		recalculateBackgroundColor();
 	}
 
@@ -112,6 +112,21 @@ public class TemplateSelectorController {
 		}
 	}
 
+	/**
+	 * Forces the snippet implementations to dump all their sub snippets and to
+	 * pick them up again from those below. TODO make this more like
+	 * "get snippet with children attached too..." TODO move to controller and
+	 * replace childPanel.getCOmponents with childControolers.getIterator() or
+	 * similar
+	 */
+	public SnippetImplementation getSnippetSimplementationWithSubSnippets() {
+		SnippetImplementation snippetImplementation = getSnippetImplementationWithoutChildren();
+		for (SnippetSelectorController childSelectorController : childControllers) {
+			snippetImplementation.addSubSnippet(childSelectorController
+					.getSnippetSimplementationWithSubSnippets());
+		}
+		return snippetImplementation;
+	}
 	public SnippetImplementation getSnippetImplementationWithoutChildren() {
 
 		switch (templateSelector.getPlaceholderType()) {
@@ -157,7 +172,7 @@ public class TemplateSelectorController {
 			List<Placeholder> placeholders = snippetImplementation
 					.getPlaceHolders();
 			for (Placeholder placeholder : placeholders) {
-				TemplateSelectorController childTemplateController = new TemplateSelectorController(
+				SnippetSelectorController childTemplateController = new SnippetSelectorController(
 						this, this.sourceProvider, "no help sorry...");
 				childTemplateController.setPlaceholder(placeholder);
 				this.addChildController(childTemplateController);
@@ -169,31 +184,16 @@ public class TemplateSelectorController {
 	 * Remove all the child controllers from the list and from the templateSelector.
 	 */
 	private void removeAllChildControllers() {
-		TemplateSelectorController childController;
+		SnippetSelectorController childController;
 		while(childControllers.size() != 0){
 			childController = childControllers.remove(0);
 			templateSelector.removeChildSelector(childController.getTemplateSelector());
 		}
 	}
 
-	/**
-	 * Forces the snippet implementations to dump all their sub snippets and to
-	 * pick them up again from those below. TODO make this more like
-	 * "get snippet with children attached too..." TODO move to controller and
-	 * replace childPanel.getCOmponents with childControolers.getIterator() or
-	 * similar
-	 */
-	public SnippetImplementation getSnippetSimplementationWithSubSnippets() {
-		SnippetImplementation snippetImplementation = getSnippetImplementationWithoutChildren();
-		for (TemplateSelectorController childSelectorController : childControllers) {
-			snippetImplementation.addSubSnippet(childSelectorController
-					.getSnippetSimplementationWithSubSnippets());
-		}
-		return snippetImplementation;
-	}
 
 	private void addChildController(
-			TemplateSelectorController childTemplateController) {
+			SnippetSelectorController childTemplateController) {
 		childControllers.add(childTemplateController);
 		templateSelector
 				.addChildSelector(childTemplateController.templateSelector);

@@ -12,13 +12,13 @@ import ehe.gordon.model.SnippetProxy;
 import ehe.gordon.model.Placeholder.PlaceholderType;
 import ehe.gordon.ui.GordonUI;
 import ehe.gordon.ui.TemplateDirectoryBrowser;
-import ehe.gordon.ui.TemplateSelector;
+import ehe.gordon.ui.SnippetSelectorPanel;
 
 public class GordonUIController {
 
 
 	private TemplateDirectoryBrowserController baseTemplateDirectoryBrowserController;
-	private TemplateSelectorController bodyTemplateTemplateSelectorController;
+	private SnippetSelectorController bodyTemplateTemplateSelectorController;
 	private GordonUI gordonUI;
 	private Gordon gordon;
 	
@@ -26,7 +26,7 @@ public class GordonUIController {
 		gordon = new Gordon();
 		baseTemplateDirectoryBrowserController = new TemplateDirectoryBrowserController();
 //		baseTemplateDirectoryBrowserController.initialise();
-		bodyTemplateTemplateSelectorController = new TemplateSelectorController(null, baseTemplateDirectoryBrowserController, "The .inc file that defines the body of the page. This is the base template.");
+		bodyTemplateTemplateSelectorController = new SnippetSelectorController(null, baseTemplateDirectoryBrowserController, "The .inc file that defines the body of the page. This is the base template.");
 		bodyTemplateTemplateSelectorController.setPlaceholder(new Placeholder("body","bingo body", PlaceholderType.Template));
 		System.out.println(bodyTemplateTemplateSelectorController.getTemplateSelector().toString());
 		this.gordonUI = new GordonUI(this);
@@ -61,7 +61,7 @@ public class GordonUIController {
 	public TemplateDirectoryBrowserController getBaseTemplateDirectoryBrowserController() {
 		return baseTemplateDirectoryBrowserController;
 	}
-	public TemplateSelectorController getBodyTemplateTemplateSelectorController() {
+	public SnippetSelectorController getBodyTemplateTemplateSelectorController() {
 		return bodyTemplateTemplateSelectorController;
 	}
 	
@@ -73,5 +73,6 @@ public class GordonUIController {
 		//For now, everything can be saved via placeholders, though this may change in the future...
 		Placeholder placeholder = bodyTemplateTemplateSelectorController.getPlaceholder();
 		System.out.println(placeholder);
+		bodyTemplateTemplateSelectorController.getSnippetSimplementationWithSubSnippets()
 	}
 }

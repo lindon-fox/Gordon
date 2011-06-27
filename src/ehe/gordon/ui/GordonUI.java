@@ -24,7 +24,7 @@ import ehe.gordon.model.Placeholder;
 import ehe.gordon.model.Placeholder.PlaceholderType;
 import ehe.gordon.ui.controller.GordonUIController;
 import ehe.gordon.ui.controller.TemplateDirectoryBrowserController;
-import ehe.gordon.ui.controller.TemplateSelectorController;
+import ehe.gordon.ui.controller.SnippetSelectorController;
 
 public class GordonUI extends JFrame {
 

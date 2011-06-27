@@ -20,18 +20,18 @@ import javax.swing.JTextField;
 import ehe.gordon.model.Placeholder;
 import ehe.gordon.model.Placeholder.PlaceholderType;
 import ehe.gordon.model.SnippetImplementation;
-import ehe.gordon.ui.controller.TemplateSelectorController;
+import ehe.gordon.ui.controller.SnippetSelectorController;
 
 /**
  * Change the name of this to something like SnippetSelectorControl
  * @author Boy.pockets
  *
  */
-public class TemplateSelector extends JPanel {
+public class SnippetSelectorPanel extends JPanel {
 
 	// CONTROLLERS
 	// private TemplateSelector parent;
-	private TemplateSelectorController controller;
+	private SnippetSelectorController controller;
 
 	public final Color COLOR_EVEN = new Color(245, 243, 234);
 	public final Color COLOR_ODD = new Color(229, 223, 200);
@@ -58,7 +58,7 @@ public class TemplateSelector extends JPanel {
 	private JRadioButton dataFileRadioButton;
 	private JRadioButton templateRadioButton;
 
-	public TemplateSelector(TemplateSelectorController controller,
+	public SnippetSelectorPanel(SnippetSelectorController controller,
 			String helpMessage) {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -373,7 +373,7 @@ public class TemplateSelector extends JPanel {
 		childPanel.remove(templateSelector);
 	}
 
-	public void addChildSelector(TemplateSelector childTemplate) {
+	public void addChildSelector(SnippetSelectorPanel childTemplate) {
 		childPanel.add(childTemplate);
 	}
 
