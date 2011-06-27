@@ -16,6 +16,7 @@ import ehe.gordon.model.Placeholder.PlaceholderType;
 import ehe.gordon.model.RepeaterFactory;
 import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.model.SnippetProxy;
+import ehe.gordon.ui.TemplateNameDialog;
 import ehe.gordon.ui.TemplateSelector;
 
 /**
@@ -44,11 +45,23 @@ public class TemplateSelectorController {
 		assert sourceProvider != null;
 		Object[] options = sourceProvider.getSnippetDefinitionMap()
 				.getSnippetNames();
-		Object result = JOptionPane.showInputDialog(this.templateSelector,
-				"Select a template", "Template select",
-				JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-
-		if (result != null) {
+//		Object result = JOptionPane.showInputDialog(this.templateSelector,
+//				"Select a template", "Template select",
+//				JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+		//TODO replace options[0] with the current selected value...
+		//TODO update the long value to the longest item in the list...
+		String defaultValue = null;
+		if(options.length > 0){
+			defaultValue = options[0].toString();
+		}
+		String userInput = templateSelector.getUserInput();
+		for (int i = 0; i < options.length; i++) {
+			if(userInput.equals(options[i].toString())){
+				defaultValue = userInput;
+			}
+		}
+		String result = TemplateNameDialog.showDialog(this.templateSelector, this.templateSelector, "Select a template", "Template Select", options, defaultValue, null);
+		if (result != null && result.equals("") == false) {
 			String snippetName = result.toString();
 			newSnippetNameSelected(snippetName);
 		} else {
