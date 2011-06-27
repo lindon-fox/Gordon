@@ -31,7 +31,16 @@ public class SnippetSelectorController {
 	private SnippetSelectorController parent;
 	private List<SnippetSelectorController> childControllers;
 
-	public SnippetSelectorController(SnippetSelectorController parent,
+	public SnippetSelectorController(SnippetSelectorController parent) {
+		this(parent, (parent != null ? parent.sourceProvider : null), "no help sorry...");
+		assert parent != null;
+	}
+
+	public SnippetSelectorController(TemplateDirectoryBrowserController sourceProvider,
+			String helpMessage) {
+		this(null, sourceProvider, helpMessage);
+	}
+	private SnippetSelectorController(SnippetSelectorController parent,
 			TemplateDirectoryBrowserController sourceProvider,
 			String helpMessage) {
 		this.sourceProvider = sourceProvider;
@@ -40,7 +49,7 @@ public class SnippetSelectorController {
 		this.templateSelector = new SnippetSelectorPanel(this, helpMessage);
 		recalculateBackgroundColor();
 	}
-
+	
 	public void userChoosingNewTemplate(ActionEvent e) {
 		assert sourceProvider != null;
 		Object[] options = sourceProvider.getSnippetDefinitionMap()
@@ -173,11 +182,20 @@ public class SnippetSelectorController {
 					.getPlaceHolders();
 			for (Placeholder placeholder : placeholders) {
 				SnippetSelectorController childTemplateController = new SnippetSelectorController(
-						this, this.sourceProvider, "no help sorry...");
+						this);
 				childTemplateController.setPlaceholder(placeholder);
 				this.addChildController(childTemplateController);
 			}
 		}
+	}
+
+	public boolean hasChildren() {
+		assert childControllers != null;
+		return childControllers.size() != 0;
+	}
+	
+	public List<SnippetSelectorController> getChildControllers() {
+		return childControllers;
 	}
 
 	/**
@@ -192,7 +210,7 @@ public class SnippetSelectorController {
 	}
 
 
-	private void addChildController(
+	public void addChildController(
 			SnippetSelectorController childTemplateController) {
 		childControllers.add(childTemplateController);
 		templateSelector
@@ -248,4 +266,5 @@ public class SnippetSelectorController {
 	public Placeholder getPlaceholder() {
 		return templateSelector.getPlaceholder();
 	}
+
 }

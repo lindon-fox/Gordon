@@ -29,6 +29,11 @@ public class Placeholder {
 		return placeholderType;
 	}
 
+	/**
+	 * TODO throw an IllegalFormatException when bad format
+	 * @param placeholderRawContents
+	 * @return given raw input, return a placholder
+	 */
 	public static Placeholder parseRawContents(String placeholderRawContents) {
 
 		// get the values

@@ -64,7 +64,7 @@ public class GordonUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Not yet implemented...");
+				controller.loadActionRequested();
 			}
 		});
 		fileMenu.add(saveConfigurationMenuItem);

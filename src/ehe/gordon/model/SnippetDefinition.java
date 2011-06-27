@@ -11,8 +11,8 @@ public class SnippetDefinition {
 
 	private static final String PARAMETER_END_REGEX_SAFE = "\\}\\}\\}";
 	private static final String PARAMETER_START_REGEX_SAFE = "\\{\\{\\{";
-	private static final String PARAMETER_END = "}}}";
-	private static final String PARAMETER_START = "{{{";
+	public static final String PARAMETER_END = "}}}";
+	public static final String PARAMETER_START = "{{{";
 	private String name;
 	/**
 	 * The raw contents contain contents and any number of snippet placeholders
