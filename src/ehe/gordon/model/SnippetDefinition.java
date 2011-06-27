@@ -130,9 +130,8 @@ public class SnippetDefinition {
 	 * @return like <code>getNameAsParameterRegexSafe</code>, but also looking for
 	 * values, so will return this: <code>{{{snippetName|*}}}</code>
 	 */
-	static int count = 0;
 	protected String getPlaceholderAsParameterWithValuesRegexSafe(Placeholder placholder){
-		System.out.println("" + count);
+		System.out.println("getPlaceholderAsParameterWithValuesRegexSafe");
 		String replaceThis = "\\\\";
 		String withThis = "\\\\\\\\";
 		String defaultValue =placholder.getDefaultValue().replaceAll(replaceThis, withThis);

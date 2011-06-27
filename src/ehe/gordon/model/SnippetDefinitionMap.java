@@ -102,9 +102,8 @@ public class SnippetDefinitionMap {
 	 */
 	public SnippetImplementation createSnippetImplementation(String snippetName) {
 		if (getSnippetDefinition(snippetName) == null) {
-			System.err.println("requested a snippet not supported "
+			throw new IllegalArgumentException("requested a snippet not supported "
 					+ snippetName);
-			return null;
 		}
 		return new SnippetImplementation(getSnippetDefinition(snippetName));
 	}

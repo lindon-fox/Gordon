@@ -23,28 +23,24 @@ import ehe.gordon.Gordon;
 import ehe.gordon.model.Placeholder;
 import ehe.gordon.model.Placeholder.PlaceholderType;
 import ehe.gordon.ui.controller.GordonUIController;
+import ehe.gordon.ui.controller.TemplateDirectoryBrowserController;
+import ehe.gordon.ui.controller.TemplateSelectorController;
 
 public class GordonUI extends JFrame {
 
 	protected GordonUIController controller;
-	private TemplateDirectoryBrowser baseTemplateDirectoryBrowser;
-	private TemplateSelector baseTemplateTemplateSelector;
 	private JTextField fileNameTextField;
-	private Gordon gordon;
 
-	public GordonUI() {
+	public GordonUI(GordonUIController controller) {
 		super();
 
-		gordon = new Gordon();
-
+		this.controller = controller;
 		// init the UI
 		initiGUI();
 	}
 
 	private void initiGUI() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-		controller = new GordonUIController(this);
 
 		// //////////////////////////////////////////////////
 		// MENU
@@ -97,30 +93,21 @@ public class GordonUI extends JFrame {
 		// //////////////////////////////////////////////////
 		JPanel headerPanel = new JPanel();
 		mainPanel.add(headerPanel, BorderLayout.NORTH);
+		
 		JLabel pageLabel = new JLabel("Using the default page template... "
-				+ gordon.getDefaultPageSnippet().getName() + "");
+				+ controller.getDefaultPageSnippet().getName() + "");
 		headerPanel.add(pageLabel);
 		// //////////////////////////////////////////////////
 		// CONTENT PANEL
 		// //////////////////////////////////////////////////
 		JPanel contentPanel = new JPanel(new BorderLayout());
 		mainPanel.add(contentPanel, BorderLayout.CENTER);
-		baseTemplateDirectoryBrowser = new TemplateDirectoryBrowser(
-				"The directory where all the templates are stored.");
-		baseTemplateDirectoryBrowser.setDescriptionLabel("template folder: ");
-		baseTemplateDirectoryBrowser
-				.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates");
-		contentPanel.add(baseTemplateDirectoryBrowser, BorderLayout.NORTH);
-		baseTemplateTemplateSelector = new TemplateSelector(
-				baseTemplateDirectoryBrowser.getController(), null,
-				"The .inc file that defines the body of the page. This is the base template.");
-		baseTemplateTemplateSelector.setPlaceholder(new Placeholder("body",
-				"bingo body", PlaceholderType.Template));// body
+		contentPanel.add(controller.getBaseTemplateDirectoryBrowserController().getTemplateDirectoryBrowser(), BorderLayout.NORTH);
 		// baseTemplateTemplateSelector.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates\\generic_body.inc");
 		JPanel subContentsPanel = new JPanel(new BorderLayout());
 		subContentsPanel.setBackground(new Color(245, 245, 245));
 		contentPanel.add(subContentsPanel, BorderLayout.CENTER);
-		subContentsPanel.add(baseTemplateTemplateSelector, BorderLayout.NORTH);
+		subContentsPanel.add(controller.getBodyTemplateTemplateSelectorController().getTemplateSelector(), BorderLayout.NORTH);
 		// //////////////////////////////////////////////////
 		// FOOTER PANEL
 		// //////////////////////////////////////////////////
@@ -142,8 +129,7 @@ public class GordonUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.runRequested(gordon.getDefaultPageSnippet(),
-						fileNameTextField.getText());
+				controller.runRequested(fileNameTextField.getText());
 			}
 		});
 		footerPanel.add(runButton, BorderLayout.EAST);
@@ -157,12 +143,12 @@ public class GordonUI extends JFrame {
 		this.setVisible(true);
 	}
 
-	public TemplateDirectoryBrowser getBaseTemplateDirectoryBrowser() {
-		return baseTemplateDirectoryBrowser;
-	}
-
-	public TemplateSelector getBaseTemplateTemplateSelector() {
-		return baseTemplateTemplateSelector;
-	}
+//	public TemplateDirectoryBrowser getBaseTemplateDirectoryBrowser() {
+//		return baseTemplateDirectoryBrowser;
+//	}
+//
+//	public TemplateSelector getBaseTemplateTemplateSelector() {
+//		return baseTemplateTemplateSelectorController;
+//	}
 
 }

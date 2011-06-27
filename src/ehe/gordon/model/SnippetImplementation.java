@@ -40,6 +40,13 @@ public class SnippetImplementation extends SnippetDefinition {
 		this.subSnippets.add(subSnippet);
 	}
 
+	public void clearAllSubSnippetsAndChildrensToo(){
+		for (SnippetImplementation childSnippet : subSnippets) {
+			childSnippet.clearAllSubSnippetsAndChildrensToo();
+		}
+		this.clearAllSubSnippets();
+	}
+	
 	public void clearAllSubSnippets(){
 		this.subSnippets.clear();
 	}
@@ -56,7 +63,6 @@ public class SnippetImplementation extends SnippetDefinition {
 	public String getContents() {
 		String contents = getParameterSafeRawContents();
 		for (SnippetImplementation subSnippet : subSnippets) {
-			//when this is run twice, there is a problem with substitutions...
 			contents = substitute(contents, subSnippet);
 		}
 		return contents.toString();

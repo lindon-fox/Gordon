@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,9 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 import ehe.gordon.io.DataInputLoader;
 import ehe.gordon.model.Placeholder;
@@ -34,15 +31,17 @@ import ehe.gordon.ui.controller.TemplateSelectorController;
 public class TemplateSelector extends JPanel {
 
 	// CONTROLLERS
-	private TemplateSelector parent;
+	//private TemplateSelector parent;
 	private TemplateSelectorController controller;
-	private TemplateDirectoryBrowserController sourceProvider;
-	private SnippetImplementation snippetImplementation;
+	//private TemplateDirectoryBrowserController sourceProvider;
+	//need to remove because we want to get the value every time...
+	//private SnippetImplementation snippetImplementation;
 
-	final Color COLOR_EVEN = new Color(245, 243, 234);
-	final Color COLOR_ODD = new Color(229, 223, 200);
+	public final Color COLOR_EVEN = new Color(245, 243, 234);
+	public final Color COLOR_ODD = new Color(229, 223, 200);
 	// MODEL INFORMATION
 	private String snippetName;
+
 	private String helpMessage;
 
 	// LAYOUT COMPONENTES
@@ -63,30 +62,23 @@ public class TemplateSelector extends JPanel {
 	private JRadioButton dataFileRadioButton;
 	private JRadioButton templateRadioButton;
 
-	public TemplateSelector(TemplateDirectoryBrowserController sourceProvider,
-			TemplateSelector parent, String helpMessage) {
+	public TemplateSelector(TemplateSelectorController controller,String helpMessage) {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.sourceProvider = sourceProvider;
-		// TODO think about if this should be the opposite way around (ie, if
-		// the template selector should be passed in as a constructor argument
-		// for the controller.
-		controller = new TemplateSelectorController(this, sourceProvider);
+		this.controller = controller;
 		this.helpMessage = helpMessage;
-		this.parent = parent;
 		initialise();
-		recalculateBackgroundColor();
 	}
 
 	// ////////////////////////////////////////////////
 	// JPanel and Component methods
 	// ////////////////////////////////////////////////
 	private void initialise() {
-		if (parent == null) {
-			this.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0,
+		if (controller.hasParent()) {
+			this.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0,
 					Color.LIGHT_GRAY));
 		} else {
-			this.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0,
+			this.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0,
 					Color.LIGHT_GRAY));
 		}
 		JPanel mainPanel = new JPanel(new FlowLayout());
@@ -169,17 +161,14 @@ public class TemplateSelector extends JPanel {
 		templatePanel.add(helpButton);
 		// Value panel
 		valueTextField = new JTextField(35);
-		valueTextField.addFocusListener(new TextFieldFocusListener());
 		valuePanel.add(valueTextField);
 		// data file panel
 		dataFileTextField = new JTextField(25);
-		dataFileTextField.addFocusListener(new TextFieldFocusListener());
 		dataPanel.add(dataFileTextField);
 				
 		JButton dataFileBrowseButton = new JButton("Browse...");
 		dataFileBrowseButton.setOpaque(false);
 		dataFileBrowseButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.userChoosingNewDataFile(e);
@@ -209,35 +198,12 @@ public class TemplateSelector extends JPanel {
 		}
 	}
 
-	private void recalculateBackgroundColor() {
-		if (parent != null) {
-			parent.recalculateBackgroundColor();
-		}
-		setBackground();
-	}
-
-	private void setBackground() {
-		Color backgroundColor;
-		if (parent == null) {
-			backgroundColor = COLOR_ODD;
-		} else {
-			backgroundColor = parent.getBackground();
-		}
-		if (backgroundColor.equals(COLOR_ODD)) {
-			backgroundColor = COLOR_EVEN;
-		} else {
-			backgroundColor = COLOR_ODD;
-		}
-		setBackground(backgroundColor);
-	}
-
 	protected void inputTypeSelected(ActionEvent e) {
 		CardLayout cl = (CardLayout) (cards.getLayout());
 		cl.show(cards, (String) e.getActionCommand());
-		recalculateCurrentSnippetImplementationSelection();
 	}
 
-	private PlaceholderType getPlaceholderType() {
+	public PlaceholderType getPlaceholderType() {
 		if (valueRadioButton.isSelected()) {
 			return PlaceholderType.Value;
 		} else if (dataFileRadioButton.isSelected()) {
@@ -250,57 +216,32 @@ public class TemplateSelector extends JPanel {
 		}
 	}
 
-	private void recalculateCurrentSnippetImplementationSelection() {
+	public String getUserInputForInputType(){
 		switch (getPlaceholderType()) {
 		case Value:
-			String userInput = getValueUserInput();
-			if (userInput == null || userInput.equals("")) {
-				setSnippetImplementation(null);
-			} else {
-				SnippetImplementation valueSnippet = new SnippetImplementation(
-						this.snippetName, userInput);
-				setSnippetImplementation(valueSnippet);
-			}
-			break;
+			return valueTextField.getText();
 		case DataList:
-			// TODO eventually make a user selected value to dictate how the
-			// data file is turned into a snippet
-			String inputPath = dataFileTextField.getText();
-			// TODO some validation please...
-			if (inputPath == null || inputPath.equals("")) {
-				setSnippetImplementation(null);
-			} else {
-				DataInputLoader inputLoader = new DataInputLoader(
-						sourceProvider.getSnippetDefinitionMap(), inputPath);
-				int columnCount = -1;
-				try{
-					columnCount = Integer.parseInt(columnsTextField.getText());
-				}
-				catch (NumberFormatException e) {
-					System.err.println("The input was not a valid number...");
-				}
-				SnippetProxy snippetProxy = new SnippetProxy(snippetName,
-						RepeaterFactory.createTableSnippet(columnCount, inputLoader,
-								sourceProvider.getSnippetDefinitionMap()));
-				setSnippetImplementation(snippetProxy);
-			}
-			break;
+			return dataFileTextField.getText();
 		case Template:
-			controller.newSnippetNameSelected(templateTextField.getText());
-			break;
+			return templateTextField.getText();
 		default:
 			throw new IllegalStateException(
 					"The value radio button or the data file radio button was expected to be selected, but neither was...");
 		}
 	}
-
-	private void recalculateLayout() {
-		if (parent != null) {
-			parent.recalculateLayout();
+	
+	public int getColumnCountInput(){
+		int columnCount = -1;
+		try{
+			columnCount = Integer.parseInt(columnsTextField.getText());
 		}
-		setBackground();
-		this.revalidate();
+		catch (NumberFormatException e) {
+			System.err.println("The input was not a valid number...");
+		}
+		return columnCount;
 	}
+	
+
 
 	public void setSnippetSelectedValue(
 			SnippetImplementation snippetImplementation) {
@@ -315,15 +256,19 @@ public class TemplateSelector extends JPanel {
 
 	private void setSnippetImplementation(
 			SnippetImplementation snippetDefinition) {
-		this.snippetImplementation = snippetDefinition;
-		controller.newSnippetDefinitionSetActionEvent();
-		recalculateLayout();
+		//this.snippetImplementation = snippetDefinition;
+		controller.newSnippetDefinitionSetActionEvent(snippetDefinition);
+		controller.recalculateLayout();
 	}
 
 	public void setTemplateTextFieldText(String text) {
 		templateTextField.setText(text);
 	}
 
+	public String getSnippetName() {
+		return snippetName;
+	}
+	
 	public Placeholder getPlaceholder() {
 		String defaultValue;
 		PlaceholderType placeholderType = getPlaceholderType();
@@ -355,6 +300,7 @@ public class TemplateSelector extends JPanel {
 		case Template:
 			templateRadioButton.doClick();
 			templateTextField.setText(placeholder.getDefaultValue());
+			controller.newSnippetNameSelected(placeholder.getDefaultValue());
 			break;
 		case Value:
 			valueRadioButton.doClick();
@@ -365,23 +311,18 @@ public class TemplateSelector extends JPanel {
 					+ placeholder.getPlaceholderType());
 			break;
 		}
-		recalculateCurrentSnippetImplementationSelection();
 	}
 
-	public SnippetImplementation getSnippetImplementation() {
-		return snippetImplementation;
-	}
+//	public SnippetImplementation getSnippetImplementationWithoutSubSnippets() {
+//		//this should be "get snippet without children attached"
+//		return snippetImplementation;
+//	}
 
 	private String getValueUserInput() {
 		return valueTextField.getText();
 	}
 
-	public void setDataFileValue(String path) {
-		setDataFileTextFieldText(path);
-		recalculateCurrentSnippetImplementationSelection();
-	}
-
-	private void setDataFileTextFieldText(String path) {
+	public void setDataFileTextFieldText(String path) {
 		dataFileTextField.setText(path);
 		if(path == null || path.equals("")){
 			dataFileTextField.setToolTipText(null);
@@ -395,20 +336,6 @@ public class TemplateSelector extends JPanel {
 		return dataFileTextField.getText();
 	}
 
-	/**
-	 * Forces the snippet implementations to dump all their sub snippets and to pick them up again from those below.
-	 */
-	public void organiseSubSnippets() {
-		snippetImplementation.clearAllSubSnippets();
-		for (Component childComponent : childPanel.getComponents()) {
-			if (childComponent instanceof TemplateSelector) {
-				TemplateSelector childSelector = (TemplateSelector) childComponent;
-				childSelector.organiseSubSnippets();
-				snippetImplementation.addSubSnippet(childSelector
-						.getSnippetImplementation());
-			}
-		}
-	}
 
 	public void clearChildSelectors() {
 		childPanel.removeAll();
@@ -425,23 +352,10 @@ public class TemplateSelector extends JPanel {
 		}
 	}
 
-	class TextFieldFocusListener implements FocusListener {
-
-		@Override
-		public void focusLost(FocusEvent e) {
-			recalculateCurrentSnippetImplementationSelection();
-		}
-
-		@Override
-		public void focusGained(FocusEvent e) {
-
-		}
-	}
-
 	@Override
 	public String toString() {
 		return "[snippetName = " + snippetName + ", snippetImplementation = "
-				+ ((snippetImplementation != null) ? "yes" : "no")
-				+ ",parent = " + ((parent != null) ? "yes" : "no") + ", placeholder = " + getPlaceholder().toString() + "]";
+				+ ((controller.getSnippetImplementationWithoutChildren() != null) ? "yes" : "no")
+				+ ",parent = " + ((controller.hasParent()) ? "yes" : "no") + ", placeholder = " + ((getPlaceholder() != null) ? getPlaceholder().toString() : null) + "]";
 	}
 }

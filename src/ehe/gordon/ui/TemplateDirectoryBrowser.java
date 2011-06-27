@@ -25,14 +25,13 @@ public class TemplateDirectoryBrowser extends JPanel {
 
 	private String helpMessage;
 
-	public TemplateDirectoryBrowser(String helpMessage) {
+	public TemplateDirectoryBrowser(TemplateDirectoryBrowserController controller, String helpMessage) {
 		super(new BorderLayout());
 		initialise();
 		// TODO think about if this should be the opposite way around (ie, if
 		// the template selector should be passed in as a constructor argument
 		// for the controller.
-		controller = new TemplateDirectoryBrowserController(this);
-		controller.initialise();
+		this.controller = controller;
 		this.helpMessage = helpMessage;
 	}
 

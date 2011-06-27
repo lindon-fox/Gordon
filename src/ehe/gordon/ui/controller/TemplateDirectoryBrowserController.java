@@ -5,8 +5,10 @@ import java.io.File;
 import java.util.HashMap;
 
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 
 import ehe.gordon.io.HTMLSnippetLoader;
+import ehe.gordon.model.Placeholder;
 import ehe.gordon.model.SnippetDefinition;
 import ehe.gordon.model.SnippetDefinitionMap;
 import ehe.gordon.ui.TemplateDirectoryBrowser;
@@ -18,18 +20,21 @@ public class TemplateDirectoryBrowserController {
 
 
 	private TemplateDirectoryBrowser templateDirectoryBrowser;
-//	private HashMap<String, SnippetDefinition> snippetMap;
+
+	//	private HashMap<String, SnippetDefinition> snippetMap;
 	private SnippetDefinitionMap snippetDefinitionMap;
 
 
-	public TemplateDirectoryBrowserController(TemplateDirectoryBrowser templateDirectoryBrowser) {
-		this.templateDirectoryBrowser = templateDirectoryBrowser;
+	public TemplateDirectoryBrowserController() {
 		this.snippetDefinitionMap = new SnippetDefinitionMap(new HashMap<String, SnippetDefinition>());//init with empty hash map to show no items yet...
+		this.templateDirectoryBrowser = new TemplateDirectoryBrowser(this, "The directory where all the templates are stored.");
+		this.templateDirectoryBrowser.setDescriptionLabel("template folder: ");
+		this.templateDirectoryBrowser.setDefaultLocation("C:\\Documents and Settings\\TC05\\My Documents\\Workspace\\Gordon\\html templates");
 	}
 
-	public void initialise() {
-		templateDirectoryBrowser.setDirectory(null);
-	}
+//	public void initialise() {
+//		templateDirectoryBrowser.setDirectory(null);
+//	}
 
 	public void userChoosingNewTemplate(ActionEvent e) {
 		JFileChooser chooser = new JFileChooser();
@@ -67,5 +72,9 @@ public class TemplateDirectoryBrowserController {
 	
 	public SnippetDefinitionMap getSnippetDefinitionMap(){
 		return snippetDefinitionMap;
+	}
+	
+	public JPanel getTemplateDirectoryBrowser() {
+		return templateDirectoryBrowser;
 	}
 }

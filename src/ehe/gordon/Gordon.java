@@ -17,6 +17,7 @@ import ehe.gordon.model.SnippetImplementation;
 import ehe.gordon.model.SnippetProxy;
 import ehe.gordon.model.SnippetRepeater;
 import ehe.gordon.ui.GordonUI;
+import ehe.gordon.ui.controller.GordonUIController;
 
 public class Gordon {
 
@@ -118,7 +119,7 @@ public class Gordon {
 			}
 			new Gordon(args[0], maxColumns, args[2]);
 		} else {
-			new GordonUI();
+			new GordonUIController();
 		}
 	}
 }
