@@ -1,0 +1,37 @@
+{medium entry|label=*}{generic row|left_contents=Japanese|right_contents=*|left_width=120px|right_row_style=medium_small_entry}{generic row|left_contents=negative （否定 ）|right_contents=*|right_row_style=medium_small_entry}{generic row|left_contents=question （疑問）|right_contents=*|right_row_style=medium_small_entry}
+This is Miki.~これは実季です。~This is not Miki.~Is this Miki?
+I am Hitomu.~あなたは一夢です。~I am not Hitomu.~Am I Hitomu?
+You play baseball.~あなたは野球をします。~You do not play baseball.~Do you play baseball?
+This is a library.~これは図書館です。~This is not a library.~Is this a library?
+I like table tennis.~わたしは卓球が好きです。~I do not like table tennis.~Do I like table tennis?
+You can speak Japanese.~あなたは日本語を話します。~You can not speak Japanese.~Can you speak Japanese?
+I am a student.~わたしは学生です。~I am not a student.~Am I a student?
+You have a car.~あなたは車を持っています~You do not have a car~Do you have a car?
+This is Mayuko.~これは万祐子です。~This is not Mayuko.~Is this Mayuko?
+I am Yuto.~私は悠叶です~I am not Yuto.~Am I Yuto?
+You play the piano.~あなたはピアノを引きます。~You can not play the piano.~Can you play the piano?
+This is your school.~あなたの学校です。~This is not your school.~Is this your school?
+I like tennis.~私はテニスが好きです。~I do not like tennis.~Do I like tennis?
+You can speak English.~あなたは英語を話します。~You can not speak English.~Can you speak English?
+I am a teacher.~あなたは先生です。~I am not a teacher.~Am I a teacher?
+You have a bike.~あなたは自転車を持っています。~You do not have a bike.~Do you have a bike?
+This is Teppei and Hayato.~これは哲平と隼人です。~This is not Teppei and Hayato.~Is this Teppei and Hayato?
+You play baseball and softball.~あなたは野球とソフトバールをします。~You do not play baseball and softball.~Do you play baseball and softball?
+This is a big library.~これは大きい図書館です。~This is not a big library.~Is this a big library?
+I like table tennis and tennis.~わたしは卓球とテニスが好きです。~I do not like table tennis and tennis.~Do I like table tennis and tennis?
+I am a good student.~わたしはいい学生です。~I am not a good student.~Am I a good student?
+You have a fast car.~あなたは早い車を持っています~You do not have a fast car~Do you have a fast car?
+This is your old school.~あなたの古い学校です。~This is not your old school.~Is this your old school?
+I am a bad teacher.~あなたは悪い先生です。~I am not a bad teacher.~Am I a bad teacher?
+You have a new bike.~あなたは新しい自転車を持っています。~You do not have a new bike.~Do you have a new bike?
+You are Natsumi.~あなたは夏海です。~You are not Natsumi.~Are you Natsumi?
+You are from China.~あなたは中国からです。~You are not from China.~Are you from China?
+This is my dog.~これは私の犬です。~This is not my dog.~Is this your dog?
+This is a lion.~これはライオンです。~This is not a lion.~Is this a lion?
+She is our teacher.~彼女は私たちの先生です。~She is not our teacher.~Is she our teacher?
+He is my friend.~かれらは私の友だちです。~He is not my friend.~Is he my friend?
+You come to school by bike.~あなたは学校に自転車で来ます。~You do not come to school by bike.~Do you come to school by bike?
+This is a train.~これは電車です。~This is not a train.~Is this a train?
+English is easy.~英語はやさしいです。~English is not easy.~Is English easy?
+Japanese is hard.~日本語は難しいです~Japanese is not hard.~Is Japanese hard?
+Your favorite subject is fine arts.~あなたの好きな教科は美術です。~Your favorite subject is not fine arts.~Is your favorite subject fine arts?
